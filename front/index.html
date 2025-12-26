@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DelivHub - Dashboard Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="header">
+        <div>
+            <h1 style="font-size: 1.1rem;"><i class="fa-solid fa-bicycle"></i> DelivHub</h1>
+        </div>
+        <div class="user-profile">
+            <i class="fa-regular fa-user"></i>&nbsp; Planner
+        </div>
+    </div>
+    <div id="sidebar-livreur">
+        <div class="controls">
+            <div class="control-group">
+                <div class="section-title"><i class="fa-regular fa-folder-open"></i> Fichiers</div>
+                <input type="file" id="xmlMapInput" accept=".xml" style="display: none;" onchange="handleLoadMap()">
+                <input type="file" id="xmlDeliveriesInput" accept=".xml" multiple style="display: none;" onchange="handleLoadDemands()">
+                <input type="file" id="jsonTourInput" accept=".json" style="display: none;" onchange="handleLoadTour()">
+                <div class="upload-row">
+                    <div class="file-upload-box" onclick="document.getElementById('xmlMapInput').click()" style="cursor: pointer;">
+                        <i class="fa-solid fa-map"></i> Plan (XML)
+                    </div>
+                    <div class="file-upload-box" id="deliveriesUploadBox" onclick="document.getElementById('xmlDeliveriesInput').click()" style="cursor: pointer; opacity: 0.5; pointer-events: none;">
+                        <i class="fa-solid fa-box-open"></i> Livraisons (XML)
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div class="section-title" style="justify-content: space-between;">
+                    <span>
+                        <i class="fa-solid fa-users"></i> Coursiers
+                        <span id="selectedCouriersCount" style="display: inline-block; background: #3498db; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; margin-left: 8px; font-weight: 600;">0</span>
+                    </span>
+                    <div style="display: flex; gap: 5px;">
+                        <button class="btn-icon" id="selectAllCouriersBtn" title="Tout sélectionner">
+                            <i class="fa-solid fa-check-double"></i>
+                        </button>
+                        <button class="btn-icon" id="deselectAllCouriersBtn" title="Tout désélectionner">
+                            <i class="fa-solid fa-square"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:8px; margin-bottom:8px; align-items:center;">
+                    <input id="courierNameInput" type="text" placeholder="Nom du coursier" style="flex:1; padding:8px; border-radius:4px; border:1px solid #bdc3c7;">
+                    <button id="createCourierBtn" class="btn btn-sm" type="button">Créer</button>
+                </div>
+
+                <div id="couriersList" style="max-height: 200px; overflow-y: auto; border: 1px solid #bdc3c7; border-radius: 4px; padding: 8px; background: #f8f9fa;">
+                    <p style="text-align: center; color: #95a5a6; font-size: 0.85rem; padding: 10px;">
+                        Aucun coursier disponible
+                    </p>
+                </div>
+            </div>
+
+            <div class="control-group" style="border:none;" id="demandsContainer">
+                <div class="section-title" style="justify-content: space-between;">
+                    <span>
+                        <i class="fa-solid fa-list-check"></i> Demandes
+                        <span id="demandsCount" style="display: inline-block; background: #3498db; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; margin-left: 8px; font-weight: 600;">0</span>
+                    </span>
+                    <div style="display: flex; gap: 5px;">
+                        <button class="btn-icon" id="clearDemandsBtn" title="Effacer toutes les demandes">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                        <button class="btn-icon" id="addDemandBtn" title="Ajouter une demande">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <p style="text-align: center; color: #95a5a6; font-size: 0.85rem; padding: 20px;">
+                    Aucune demande chargée. Chargez un fichier XML de livraisons.
+                </p>
+
+            </div>
+        </div>
+
+        <div style="padding: 20px; border-top: 1px solid var(--border-color);">
+            <button class="btn btn-primary">
+                <i class="fa-solid fa-calculator"></i> Calculer la tournée
+            </button>
+        </div>
+    </div>
+
+    <div id="sidebar-history" style="display:none; padding:20px; overflow-y:auto;">
+        <h3 style="margin-bottom:10px;">Historique des tournées</h3>
+        <button id="historyBtn" class="btn btn-sm btn-primary" style="width:auto; margin-bottom:10px;">
+            Recharger l'historique
+        </button>
+        <div id="historyError" style="color:#b00020; margin-bottom:8px;"></div>
+        <div id="historyResults"></div>
+    </div>
+
+</div>
+
+<div class="main-content">
+    <div class="toolbar">
+        <div class="view-toggles">
+            <button class="toggle-btn active" data-view="courier">Vue Livreur</button>
+            <!-- <button class="toggle-btn" data-view="global">Vue Globale</button> -->
+            <button class="toggle-btn" data-view="history">Vue Historique</button>
+        </div>
+    </div>
+
+    <!-- Vue Livreur (carte + timeline) -->
+    <div id="view-courier" class="main-view">
+        <div class="map-container">
+            <div id="map" style="width: 100%; height: 100%;">
+                <div class="map-placeholder" id="mapPlaceholder" style="background: white; padding: 20px; border-radius: 8px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                    <i class="fa-solid fa-map-location-dot" style="font-size: 3rem; color: var(--secondary-color); margin-bottom: 15px;"></i>
+                    <h3>Visualisation de la Carte</h3>
+                    <p style="color: #7f8c8d; margin-top: 5px;">Chargez un plan XML pour commencer</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tour-timeline">
+            <div class="section-title">
+                <span><i class="fa-solid fa-stopwatch"></i> Détails de la tournée</span>
+                <div style="display: flex; gap: 8px; margin-left: auto; align-items: center;">
+                    <!-- Sélecteur de tournées par coursier (affiché quand plusieurs tournées calculées) -->
+                    <div id="courierSelectContainer" style="display: none;">
+                        <select id="courierTourSelect" style="padding: 6px 12px; border: 1px solid #bdc3c7; border-radius: 6px; font-size: 0.85rem; font-weight: 600; color: var(--secondary-color); background: #f8f9fa; cursor: pointer;">
+                            <option value="">Sélectionner une tournée...</option>
+                        </select>
+                    </div>
+                    <div id="courierInfo" style="display: none; padding: 4px 12px; background: #f8f9fa; border: 1px solid #bdc3c7; border-radius: 6px; font-size: 0.85rem; font-weight: 600; color: var(--secondary-color);">
+                        <i class="fa-solid fa-user"></i> <span id="courierName">-</span>
+                    </div>
+                    <button class="btn btn-sm save-btn" id="saveTourBtn" style="background:white; border:1px solid #bdc3c7; display:none;">
+                        <i class="fa-solid fa-floppy-disk" style="margin-right:6px"></i> Sauvegarder
+                    </button>
+                </div>
+            </div>
+            <div class="timeline-scroll">
+                <p style="text-align: center; color: #95a5a6; font-size: 0.85rem; padding: 10px;">
+                    Aucune tournée chargée. Calculez ou restaurez une tournée.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<!-- Backend classes (load in order of dependencies) -->
+<script src="/backend/demand.js"></script>
+<script src="/backend/node.js"></script>
+<script src="/backend/segment.js"></script>
+<script src="/backend/plan.js"></script>
+<script src="/backend/courier.js"></script>
+<script src="/backend/tourpoint.js"></script>
+<script src="/backend/leg.js"></script>
+<script src="/backend/tours.js"></script>
+<script src="/backend/computerTour.js"></script>
+<script src="/backend/system.js"></script>
+
+<!-- View class -->
+<script src="/front/scripts/view.js"></script>
+
+<!-- Geocoding service -->
+<script src="/front/scripts/geocoding.js"></script>
+
+<!-- Sidebar ajout de demande -->
+<div id="addDemandSidebar" class="demand-sidebar" style="display:none;">
+    <div class="demand-sidebar-header">
+        <h3>Ajouter une demande</h3>
+        <button type="button" id="addDemandCloseBtn" class="btn-icon">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+
+    <form id="addDemandForm" class="demand-sidebar-body">
+        <!-- Instructions -->
+        <div style="background: #e3f2fd; border-left: 4px solid #2196f3; padding: 12px; margin-bottom: 15px; border-radius: 4px;">
+            <p style="margin: 0; font-size: 0.9rem; color: #1976d2;">
+                <i class="fa-solid fa-info-circle"></i> Cliquez sur les boutons ci-dessous puis sélectionnez les points sur la carte
+            </p>
+        </div>
+
+        <!-- Point d'enlèvement -->
+        <div class="form-row">
+            <label>Point d'enlèvement (Pickup)</label>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <button type="button" id="selectPickupBtn" class="btn" style="flex: 1;">
+                    <i class="fa-solid fa-map-marker-alt"></i> Sélectionner sur la carte
+                </button>
+                <input type="text" id="pickupAddressDisplay" readonly placeholder="Aucun point sélectionné"
+                       style="flex: 2; background: #f5f5f5; cursor: not-allowed;">
+            </div>
+            <input type="hidden" id="pickupAddressInput" required>
+        </div>
+
+        <!-- Point de livraison -->
+        <div class="form-row">
+            <label>Point de livraison (Delivery)</label>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <button type="button" id="selectDeliveryBtn" class="btn" style="flex: 1;">
+                    <i class="fa-solid fa-map-marker-alt"></i> Sélectionner sur la carte
+                </button>
+                <input type="text" id="deliveryAddressDisplay" readonly placeholder="Aucun point sélectionné"
+                       style="flex: 2; background: #f5f5f5; cursor: not-allowed;">
+            </div>
+            <input type="hidden" id="deliveryAddressInput" required>
+        </div>
+
+        <!-- Durées -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div class="form-row">
+                <label for="pickupDurationInput">Durée pickup (sec)</label>
+                <input type="number" id="pickupDurationInput" min="0" value="300" required>
+            </div>
+
+            <div class="form-row">
+                <label for="deliveryDurationInput">Durée delivery (sec)</label>
+                <input type="number" id="deliveryDurationInput" min="0" value="300" required>
+            </div>
+        </div>
+
+        <div class="demand-sidebar-footer">
+            <button type="button" class="btn" id="addDemandCancelBtn">Annuler</button>
+            <button type="submit" class="btn btn-primary" id="addDemandSubmitBtn">
+                <i class="fa-solid fa-plus"></i> Ajouter
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Main application script -->
+<script src="scripts/app.js"></script>
+
+
+</body>
+</html>

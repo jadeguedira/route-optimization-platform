@@ -1,0 +1,805 @@
+:root {
+    --primary-color: #2ecc71;
+    --primary-dark: #27ae60;
+    --secondary-color: #2c3e50;
+    --bg-color: #ecf0f1;
+    --panel-bg: #ffffff;
+    --text-color: #34495e;
+    --border-color: #dfe6e9;
+    --danger-color: #e74c3c;
+    --warning-color: #f1c40f;
+    --accent-pickup: #e67e22;
+    --accent-delivery: #27ae60;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+}
+
+/* État de chargement global */
+body.loading {
+    cursor: wait !important;
+}
+
+body.loading * {
+    cursor: wait !important;
+    pointer-events: none;
+}
+
+body.loading button,
+body.loading input,
+body.loading select {
+    cursor: wait !important;
+}
+
+/* --- SIDEBAR --- */
+.sidebar {
+    width: 380px; /* Un peu plus large pour les actions */
+    min-width: 380px;
+    flex-shrink: 0;
+    background-color: var(--panel-bg);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 4px 0 10px rgba(0,0,0,0.03);
+    z-index: 10;
+}
+
+.header {
+    padding: 20px;
+    background-color: var(--secondary-color);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    font-size: 0.8rem;
+    background: rgba(255,255,255,0.1);
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+
+.controls {
+    padding: 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex-grow: 1;
+    min-width: 0;
+}
+
+.control-group {
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.section-title {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #95a5a6;
+    margin-bottom: 15px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    min-width: 0;
+}
+
+/* Small save button inside section titles (compact) */
+.section-title .save-btn {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--secondary-color);
+    background: white;
+}
+
+/* Courier Info Display */
+#courierInfo {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#courierInfo i {
+    color: var(--primary-color);
+}
+
+/* Boutons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+    gap: 8px;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+}
+
+.btn-sm {
+    padding: 4px 8px;
+    font-size: 0.8rem;
+    width: auto;
+}
+
+.btn-icon {
+    background: none;
+    color: #95a5a6;
+    padding: 5px;
+}
+
+.btn-icon:hover {
+    color: var(--secondary-color);
+    background-color: #f1f2f6;
+    border-radius: 4px;
+}
+
+.btn-icon.delete:hover {
+    color: var(--danger-color);
+}
+
+/* File Uploads */
+.upload-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.file-upload-box {
+    flex: 1;
+    padding: 15px;
+    border: 2px dashed #bdc3c7;
+    border-radius: 6px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 0.8rem;
+    color: #7f8c8d;
+    transition: 0.2s;
+}
+
+.file-upload-box:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    background: #f0fff4;
+}
+
+.file-upload-box i {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    display: block;
+}
+
+/* Liste des demandes */
+.demand-card {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--secondary-color);
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    transition: transform 0.2s;
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow: hidden;
+}
+
+.demand-card:hover {
+    transform: translateX(2px);
+    border-color: #bdc3c7;
+}
+
+.demand-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+
+.demand-actions {
+    display: flex;
+    gap: 2px;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+.demand-card:hover .demand-actions {
+    opacity: 1;
+}
+
+.point-row {
+    display: flex;
+    align-items: center;
+    font-size: 0.8rem;
+    margin-top: 4px;
+    color: #34495e;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.dot-p {
+    background-color: var(--accent-pickup);
+}
+
+.dot-d {
+    background-color: var(--accent-delivery);
+}
+
+/* --- Historique des tournées (sidebar) --- */
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.history-item {
+    width: 100%;
+    text-align: left;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 8px 10px;
+    background-color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease, border-color 0.15s ease;
+}
+
+.history-item:hover {
+    background-color: #f8f9fa;
+    border-color: #bdc3c7;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    transform: translateY(-1px);
+}
+
+.history-title {
+    font-weight: 600;
+    color: var(--secondary-color);
+    font-size: 0.9rem;
+}
+
+.history-meta {
+    font-size: 0.8rem;
+    color: #7f8c8d;
+}
+
+.history-controls {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.history-status {
+    font-size: 0.82rem;
+    color: #7f8c8d;
+    margin-bottom: 6px;
+}
+
+.history-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.history-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: #34495e;
+}
+
+.history-legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    border: 2px solid white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.history-left {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex: 1;
+}
+
+.history-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.history-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#sidebar-livreur,
+#sidebar-history {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+
+/* --- MAIN CONTENT --- */
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.main-view {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.toolbar {
+    height: 60px;
+    background: white;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+}
+
+.view-toggles {
+    background: #f1f2f6;
+    padding: 4px;
+    border-radius: 6px;
+    display: flex;
+}
+
+.toggle-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    background: transparent;
+    color: #7f8c8d;
+}
+
+.toggle-btn.active {
+    background: white;
+    color: var(--secondary-color);
+    font-weight: bold;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.map-container {
+    flex-grow: 1;
+    background-color: #e5e5f7;
+    background-image: radial-gradient(#bdc3c7 1px, transparent 1px);
+    background-size: 20px 20px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Timeline Modifiable */
+.tour-timeline {
+    height: 220px;
+    background: white;
+    border-top: 1px solid var(--border-color);
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.timeline-scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 8px 20px 16px 20px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    gap: 0;
+    flex: 1;
+    min-height: 0;
+}
+
+/* Style de la scrollbar pour timeline-scroll */
+.timeline-scroll::-webkit-scrollbar {
+    height: 8px;
+}
+
+.timeline-scroll::-webkit-scrollbar-track {
+    background: #f1f2f6;
+    border-radius: 4px;
+}
+
+.timeline-scroll::-webkit-scrollbar-thumb {
+    background: #bdc3c7;
+    border-radius: 4px;
+}
+
+.timeline-scroll::-webkit-scrollbar-thumb:hover {
+    background: #95a5a6;
+}
+
+.tour-timeline .section-title {
+    margin-bottom: 8px;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    max-width: 100%;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+    flex-shrink: 0;
+    transition: all 0.2s;
+    z-index: 2;
+    width: 100px;
+    height: 120px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+.step:hover {
+    background: rgba(52, 152, 219, 0.1);
+}
+
+.step.step-selected {
+    background: rgba(52, 152, 219, 0.2);
+    transform: scale(1.05);
+}
+
+.step.step-selected .step-icon {
+    box-shadow: 0 0 15px rgba(52, 152, 219, 0.6);
+    border-color: #3498db;
+}
+
+.step.step-selected .step-time {
+    color: #3498db;
+}
+
+/* Masquer le connecteur - on utilise la ligne continue */
+.step-connector {
+    display: none;
+}
+
+
+.step-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: white;
+    border: 3px solid var(--secondary-color);
+    color: var(--secondary-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    position: relative;
+    z-index: 2;
+    flex-shrink: 0;
+}
+
+.step-time {
+    margin-top: 12px;
+    font-weight: 700;
+    color: var(--secondary-color);
+    font-size: 0.9rem;
+    width: 100%;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.step-desc {
+    font-size: 0.7rem;
+    color: #7f8c8d;
+    margin-top: 4px;
+    text-align: center;
+    width: 90px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 0;
+}
+
+/* Controls inside each timeline step (left/right arrows) */
+.step-controls {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+}
+
+.step-controls .btn {
+    background-color: #f6f7f9;
+    border: 1px solid var(--border-color);
+    color: var(--secondary-color);
+    padding: 4px 8px;
+    border-radius: 6px;
+    min-width: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    font-size: 0.85rem;
+}
+
+.step-controls .btn:hover {
+    background-color: white;
+}
+
+.step-controls .btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+
+/* --- MODAL STYLES --- */
+/* Sidebar ajout de demande */
+.demand-sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 450px;
+    height: 100vh;
+    background: white;
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-out;
+}
+
+.demand-sidebar[style*="display: flex"],
+.demand-sidebar[style*="display:flex"] {
+    transform: translateX(0);
+}
+
+.demand-sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+    border-bottom: 1px solid var(--border-color);
+    background: linear-gradient(135deg, var(--secondary-color) 0%, #34495e 100%);
+    color: white;
+    flex-shrink: 0;
+}
+
+.demand-sidebar-header h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.demand-sidebar-header .btn-icon {
+    color: white;
+    padding: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.demand-sidebar-header .btn-icon:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
+}
+
+.demand-sidebar-body {
+    padding: 25px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.form-row {
+    margin-bottom: 20px;
+}
+
+.form-row label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--secondary-color);
+    font-size: 0.9rem;
+}
+
+.form-row input,
+.form-row select,
+.form-row textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.form-row input:focus,
+.form-row select:focus,
+.form-row textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1);
+}
+
+.form-row input::placeholder {
+    color: #bdc3c7;
+}
+
+/* Styles pour les boutons de sélection de points */
+#selectPickupBtn,
+#selectDeliveryBtn {
+    white-space: nowrap;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+#selectPickupBtn:hover,
+#selectDeliveryBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+#selectPickupBtn i,
+#selectDeliveryBtn i {
+    font-size: 1.1em;
+}
+
+/* Champs d'affichage en lecture seule */
+#pickupAddressDisplay,
+#deliveryAddressDisplay {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+    font-style: italic;
+}
+
+/* Animation pour le curseur crosshair sur la carte */
+#map.selecting-node {
+    cursor: crosshair !important;
+}
+
+#map.selecting-node * {
+    cursor: crosshair !important;
+}
+
+/* Info box dans le modal */
+.modal-body > div[style*="background: #e3f2fd"] {
+    animation: slideInFromTop 0.4s ease-out;
+}
+
+@keyframes slideInFromTop {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Tooltip amélioré pour Leaflet */
+.leaflet-tooltip {
+    background-color: rgba(44, 62, 80, 0.95) !important;
+    border: none !important;
+    color: white !important;
+    font-weight: 600 !important;
+    font-size: 0.85rem !important;
+    padding: 6px 12px !important;
+    border-radius: 6px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+.leaflet-tooltip::before {
+    border-top-color: rgba(44, 62, 80, 0.95) !important;
+}
+
+/* Popup amélioré pour Leaflet */
+.leaflet-popup-content-wrapper {
+    border-radius: 8px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2) !important;
+}
+
+.leaflet-popup-content {
+    margin: 12px 16px !important;
+    font-size: 0.9rem !important;
+}
+
+.leaflet-popup-content b {
+    color: var(--secondary-color);
+    display: block;
+    margin-bottom: 4px;
+}
+
+/* Animation des marqueurs au survol */
+.leaflet-marker-icon {
+    transition: all 0.2s ease;
+}
+
+.demand-sidebar-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+    margin-top: 10px;
+}
+
+.modal-footer .btn {
+    width: auto;
+    padding: 10px 25px;
+}
+
+.modal-footer .btn:not(.btn-primary) {
+    background-color: #ecf0f1;
+    color: var(--text-color);
+}
+
+.modal-footer .btn:not(.btn-primary):hover {
+    background-color: #dfe6e9;
+}
+

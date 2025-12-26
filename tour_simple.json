@@ -1,0 +1,80 @@
+{
+  "id": "T_SIMPLE_001",
+  "departureTime": "08:00",
+  "courier": {
+    "id": "C1",
+    "name": "Jean Dupont"
+  },
+  "stops": [
+    {
+      "node": { "id": "1", "latitude": 45.75406, "longitude": 4.857418 },
+      "serviceDuration": 0,
+      "type": "ENTREPOT",
+      "demand": null
+    },
+    {
+      "node": { "id": "2", "latitude": 45.75343, "longitude": 4.8574653 },
+      "serviceDuration": 300,
+      "type": "PICKUP",
+      "demand": {
+        "id": "DEM_20250101_001",
+        "pickupAddress": "2",
+        "deliveryAddress": "3",
+        "pickupDuration": 300,
+        "deliveryDuration": 240
+      }
+    },
+    {
+      "node": { "id": "3", "latitude": 45.75425, "longitude": 4.8591485 },
+      "serviceDuration": 240,
+      "type": "DELIVERY",
+      "demand": {
+        "id": "DEM_20250101_001",
+        "pickupAddress": "2",
+        "deliveryAddress": "3",
+        "pickupDuration": 300,
+        "deliveryDuration": 240
+      }
+    },
+    {
+      "node": { "id": "1", "latitude": 45.75406, "longitude": 4.857418 },
+      "serviceDuration": 0,
+      "type": "ENTREPOT",
+      "demand": null
+    }
+  ],
+  "legs": [
+    {
+      "from": null,
+      "to": null,
+      "path": [
+        { "id": "1", "latitude": 45.75406, "longitude": 4.857418 },
+        { "id": "2", "latitude": 45.75343, "longitude": 4.8574653 }
+      ],
+      "distance": 1000,
+      "travelTime": 600
+    },
+    {
+      "from": null,
+      "to": null,
+      "path": [
+        { "id": "2", "latitude": 45.75343, "longitude": 4.8574653 },
+        { "id": "3", "latitude": 45.75425, "longitude": 4.8591485 }
+      ],
+      "distance": 500,
+      "travelTime": 300
+    },
+    {
+      "from": null,
+      "to": null,
+      "path": [
+        { "id": "3", "latitude": 45.75425, "longitude": 4.8591485 },
+        { "id": "1", "latitude": 45.75406, "longitude": 4.857418 }
+      ],
+      "distance": 1200,
+      "travelTime": 900
+    }
+  ],
+  "totalDuration": 2340,
+  "totalDistance": 2700
+}

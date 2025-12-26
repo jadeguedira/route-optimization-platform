@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Change Points order</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        #map {
+            height: 600px;
+            width: 100%;
+            border: 2px solid #333;
+        }
+
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Test de la classe View (Tour)</h1>
+
+    <div class="controls">
+        <button onclick="showExampleTour()">Afficher une tournée d'exemple</button>
+        <button onclick="view.clearMap()">Effacer la carte</button>
+    </div>
+
+    <div id="map"></div>
+    <div id="tour-points" style="margin-top:20px;"></div>
+    <div id="error-message" style="color:red; font-weight:bold; margin-top:10px;"></div>
+
+
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+    <!-- Backend Classes -->
+    <script src="/backend/node.js"></script>
+    <script src="/backend/segment.js"></script>
+    <script src="/backend/courier.js"></script>
+    <script src="/backend/tourpoint.js"></script>
+    <script src="/backend/leg.js"></script>
+    <script src="/backend/tours.js"></script>
+
+    <!-- View Class -->
+    <script src="/front/scripts/view.js"></script>
+
+    <script>
+        // Initialize View
+        const view = new View("08:00", 'map');
+        let tour = null ;
+
+        // Function to create and show an example tour
+        function showExampleTour() {
+            console.log('Creating example tour...');
+
+            // Create nodes for the itinerary
+            const node1 = new Node("25175791", 45.75406, 4.857418, []);
+            const node2 = new Node("25175778", 45.75343, 4.8574653, []);
+            const node3 = new Node("2117622723", 45.75425, 4.8591485, []);
+            const node4 = new Node("2117622721", 45.753757, 4.8601513, []);
+            const node5 = new Node("25611760", 45.754536, 4.866525, []);
+
+            // Create segments between nodes
+            node1.segment = new Segment("25175791", "25175778", "Rue Danton", 69.98);
+            node2.segment = new Segment("25175778", "2117622723", "Rue de l'Abondance", 136.01);
+            node3.segment = new Segment("2117622723", "2117622721", "Rue de l'Abondance", 45.5);
+            // node4.segment = new Segment("2117622721", "25611760", "Avenue Félix Faure", 180.5);
+            // node5.segment = new Segment("25611760", "25175791", "Rue Danton", 200.3);
+
+            // Create a courier
+            const courier = new Courier("Jean Dupont", "jean@example.com");
+
+            // Create the tour
+            tour = new Tour(null, "08:00", courier);
+
+            // Tour Points using composition (has-a node)
+
+            // Pickup 1
+            const p1 = new TourPoint(node1, 60, "PICKUP", null);
+
+            // Delivery 1
+            const d1 = new TourPoint(node2, 120, "DELIVERY", null);
+
+            // Link between pickup and delivery using relatedTourPoint
+            p1.relatedTourPoint = d1;
+            d1.relatedTourPoint = p1;
+
+            // Pickup 2
+            const p2 = new TourPoint(node4, 90, "PICKUP", null);
+
+            // Delivery 2
+            const d2 = new TourPoint(node5, 150, "DELIVERY", null);
+
+            // Link between pickup and delivery using relatedTourPoint
+            p2.relatedTourPoint = d2;
+            d2.relatedTourPoint = p2;
+
+            // Start warehouse
+            const start = new TourPoint(node3, 0, "WAREHOUSE", null);
+            
+            // End warehouse
+            const end = new TourPoint(node3, 0, "WAREHOUSE", null);
+
+            // Build the stops (not itinerary)
+            tour.stops = [
+                start,   // index 0 — can't move
+                p1,      // index 1 — can move
+                d1,      // index 2 — can move
+                p2,      // index 3 — can move
+                d2,      // index 4 — can move
+                end      // index 5 — can't move
+            ];
+
+            // Create legs (simple paths between consecutive stops)
+            updateTourLegs();
+
+            // Display the tour
+            view.displayTour(tour);
+
+            // Optional: Display tour points in a list
+            displayTourPoints(tour.stops);
+
+
+            console.log('Tour displayed!');
+        }
+
+        // Automatically show the example tour when page loads
+        window.addEventListener('load', () => {
+            setTimeout(showExampleTour, 500);
+        });
+
+        // Function to update tour legs (paths between consecutive stops)
+        function updateTourLegs() {
+            tour.legs = [];
+            for (let i = 0; i < tour.stops.length - 1; i++) {
+                const from = tour.stops[i];
+                const to = tour.stops[i + 1];
+                const leg = new Leg(from, to, [from.node, to.node], 0, 0);
+                tour.legs.push(leg);
+            }
+        }
+
+        // Function to display tour points in a list
+       function displayTourPoints(stops) {
+        const container = document.getElementById("tour-points");
+        container.innerHTML = "<h2>Points de passage</h2>";
+
+        const list = document.createElement("ol");
+
+        stops.forEach((point, index) => {
+            const li = document.createElement("li");
+            li.textContent = `Node ${point.node.id} (${point.type}) `;
+
+            // Bouton ↑
+            const upBtn = document.createElement("button");
+            upBtn.textContent = "↑";
+            upBtn.onclick = () => {
+                clearError();
+                const oldIndex = tour.stops.indexOf(point);
+                console.log("CLICK ↑", point.node.id, "oldIndex =", oldIndex);
+
+                const success = tour.movePoint(oldIndex, oldIndex - 1);
+                console.log("success =", success, "new order =", tour.stops.map(p => p.node.id));
+
+                if (!success.valid) {
+                    showError(getErrorMessage(success));
+                    return;
+                }
+
+                updateTourLegs();
+                view.displayTour(tour);
+                displayTourPoints(tour.stops);
+            };
+
+
+            // Bouton ↓
+            const downBtn = document.createElement("button");
+            downBtn.textContent = "↓";
+            downBtn.onclick = () => {
+                clearError();
+                const oldIndex = tour.stops.indexOf(point);
+                const success = tour.movePoint(oldIndex, oldIndex + 1);
+
+                if (!success.valid) {
+                    showError(getErrorMessage(success));
+                    return;
+                }
+
+                updateTourLegs();
+                view.displayTour(tour);
+                displayTourPoints(tour.stops);
+            };
+
+            li.appendChild(upBtn);
+            li.appendChild(downBtn);
+
+            list.appendChild(li);
+        });
+
+        container.appendChild(list);
+    }
+
+    function getErrorMessage(result) {
+        switch (result.reason) {
+            case "DEPOT_START":
+                return "❌ L'entrepôt de début ne peut pas être déplacé.";
+
+            case "DEPOT_END_MOVE":
+                return "❌ L'entrepôt de fin ne peut pas être déplacé.";
+
+            case "DEPOT_START_MUST_REMAIN":
+                return "❌ L'entrepôt de début doit rester en première position.";
+
+            case "DEPOT_END_MUST_REMAIN":
+                return "❌ L'entrepôt final doit rester en dernière position.";
+
+            case "PICKUP_AFTER_DELIVERY":
+                return "❌ Un pickup ne peut jamais être placé après sa livraison.";
+
+            case "DELIVERY_BEFORE_PICKUP":
+                return "❌ Une livraison ne peut jamais précéder son pickup.";
+
+            default:
+                return "❌ Déplacement interdit.";
+        }
+    }
+
+
+    function showError(msg) {
+        document.getElementById("error-message").textContent = msg;
+    }
+
+    function clearError() {
+        document.getElementById("error-message").textContent = "";
+    }
+
+
+
+    </script>
+</body>
+
+</html>
+
+
+

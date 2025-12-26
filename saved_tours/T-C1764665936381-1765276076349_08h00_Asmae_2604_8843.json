@@ -1,0 +1,1244 @@
+{
+  "id": "T-C1764665936381-1765276076349_08h00_Asmae_2604_8843",
+  "departureTime": "08:00",
+  "courier": {
+    "id": "C1764665936381",
+    "name": "Asmae"
+  },
+  "stops": [
+    {
+      "node": {
+        "id": "1349383079",
+        "latitude": 45.731087,
+        "longitude": 4.9053183
+      },
+      "serviceDuration": 0,
+      "type": "WAREHOUSE",
+      "demand": null,
+      "relatedTourPoint": null
+    },
+    {
+      "node": {
+        "id": "55444018",
+        "latitude": 45.759853,
+        "longitude": 4.8953767
+      },
+      "serviceDuration": 60,
+      "type": "PICKUP",
+      "demand": {
+        "id": 2,
+        "pickupAddress": "55444018",
+        "deliveryAddress": "26470086",
+        "pickupDuration": 60,
+        "deliveryDuration": 420
+      },
+      "relatedTourPoint": "26470086"
+    },
+    {
+      "node": {
+        "id": "26470086",
+        "latitude": 45.749653,
+        "longitude": 4.895372
+      },
+      "serviceDuration": 420,
+      "type": "DELIVERY",
+      "demand": {
+        "id": 2,
+        "pickupAddress": "55444018",
+        "deliveryAddress": "26470086",
+        "pickupDuration": 60,
+        "deliveryDuration": 420
+      },
+      "relatedTourPoint": "55444018"
+    },
+    {
+      "node": {
+        "id": "1349383079",
+        "latitude": 45.731087,
+        "longitude": 4.9053183
+      },
+      "serviceDuration": 0,
+      "type": "WAREHOUSE",
+      "demand": null,
+      "relatedTourPoint": null
+    }
+  ],
+  "legs": [
+    {
+      "from": {
+        "node": {
+          "id": "1349383079",
+          "latitude": 45.731087,
+          "longitude": 4.9053183
+        },
+        "serviceDuration": 0,
+        "type": "WAREHOUSE",
+        "demand": null,
+        "relatedTourPoint": null
+      },
+      "to": {
+        "node": {
+          "id": "55444018",
+          "latitude": 45.759853,
+          "longitude": 4.8953767
+        },
+        "serviceDuration": 60,
+        "type": "PICKUP",
+        "demand": {
+          "id": 2,
+          "pickupAddress": "55444018",
+          "deliveryAddress": "26470086",
+          "pickupDuration": 60,
+          "deliveryDuration": 420
+        },
+        "relatedTourPoint": "26470086"
+      },
+      "pathNode": [
+        {
+          "id": "1349383079",
+          "latitude": 45.731087,
+          "longitude": 4.9053183
+        },
+        {
+          "id": "245025987",
+          "latitude": 45.73134,
+          "longitude": 4.9040866
+        },
+        {
+          "id": "245023124",
+          "latitude": 45.730904,
+          "longitude": 4.903831
+        },
+        {
+          "id": "245023123",
+          "latitude": 45.731644,
+          "longitude": 4.9027042
+        },
+        {
+          "id": "2292223595",
+          "latitude": 45.73208,
+          "longitude": 4.902046
+        },
+        {
+          "id": "245023120",
+          "latitude": 45.732418,
+          "longitude": 4.901371
+        },
+        {
+          "id": "60901987",
+          "latitude": 45.73325,
+          "longitude": 4.8993382
+        },
+        {
+          "id": "60901983",
+          "latitude": 45.734013,
+          "longitude": 4.897888
+        },
+        {
+          "id": "60901982",
+          "latitude": 45.734184,
+          "longitude": 4.8974867
+        },
+        {
+          "id": "60901948",
+          "latitude": 45.73438,
+          "longitude": 4.8970246
+        },
+        {
+          "id": "245054847",
+          "latitude": 45.73461,
+          "longitude": 4.896528
+        },
+        {
+          "id": "60901949",
+          "latitude": 45.73489,
+          "longitude": 4.8958178
+        },
+        {
+          "id": "2864851043",
+          "latitude": 45.73638,
+          "longitude": 4.8961105
+        },
+        {
+          "id": "60901945",
+          "latitude": 45.737644,
+          "longitude": 4.8963575
+        },
+        {
+          "id": "60901944",
+          "latitude": 45.738197,
+          "longitude": 4.8946996
+        },
+        {
+          "id": "21715078",
+          "latitude": 45.738525,
+          "longitude": 4.8937016
+        },
+        {
+          "id": "194605193",
+          "latitude": 45.738644,
+          "longitude": 4.893329
+        },
+        {
+          "id": "657813231",
+          "latitude": 45.73877,
+          "longitude": 4.8930063
+        },
+        {
+          "id": "657813243",
+          "latitude": 45.739384,
+          "longitude": 4.892452
+        },
+        {
+          "id": "2453716845",
+          "latitude": 45.74038,
+          "longitude": 4.8929963
+        },
+        {
+          "id": "25610688",
+          "latitude": 45.741886,
+          "longitude": 4.8938003
+        },
+        {
+          "id": "25610707",
+          "latitude": 45.742126,
+          "longitude": 4.8939195
+        },
+        {
+          "id": "25611046",
+          "latitude": 45.74332,
+          "longitude": 4.8945346
+        },
+        {
+          "id": "25611052",
+          "latitude": 45.743412,
+          "longitude": 4.8945613
+        },
+        {
+          "id": "25611054",
+          "latitude": 45.743637,
+          "longitude": 4.8947797
+        },
+        {
+          "id": "25610743",
+          "latitude": 45.74484,
+          "longitude": 4.895428
+        },
+        {
+          "id": "25611151",
+          "latitude": 45.74634,
+          "longitude": 4.8962135
+        },
+        {
+          "id": "25611153",
+          "latitude": 45.747414,
+          "longitude": 4.89657
+        },
+        {
+          "id": "25611155",
+          "latitude": 45.748528,
+          "longitude": 4.896777
+        },
+        {
+          "id": "1921810545",
+          "latitude": 45.7488,
+          "longitude": 4.896828
+        },
+        {
+          "id": "25611156",
+          "latitude": 45.74958,
+          "longitude": 4.8970795
+        },
+        {
+          "id": "2202205400",
+          "latitude": 45.75017,
+          "longitude": 4.8971896
+        },
+        {
+          "id": "25611158",
+          "latitude": 45.75038,
+          "longitude": 4.8973455
+        },
+        {
+          "id": "1370403183",
+          "latitude": 45.751247,
+          "longitude": 4.8975964
+        },
+        {
+          "id": "25611209",
+          "latitude": 45.75164,
+          "longitude": 4.8977337
+        },
+        {
+          "id": "624172877",
+          "latitude": 45.7519,
+          "longitude": 4.897871
+        },
+        {
+          "id": "25611211",
+          "latitude": 45.75276,
+          "longitude": 4.8982906
+        },
+        {
+          "id": "25611212",
+          "latitude": 45.752914,
+          "longitude": 4.898419
+        },
+        {
+          "id": "4146048139",
+          "latitude": 45.753048,
+          "longitude": 4.898444
+        },
+        {
+          "id": "1370403192",
+          "latitude": 45.753563,
+          "longitude": 4.8986764
+        },
+        {
+          "id": "2284488019",
+          "latitude": 45.75455,
+          "longitude": 4.8991904
+        },
+        {
+          "id": "191134429",
+          "latitude": 45.755123,
+          "longitude": 4.899358
+        },
+        {
+          "id": "505061092",
+          "latitude": 45.75685,
+          "longitude": 4.8997655
+        },
+        {
+          "id": "505061101",
+          "latitude": 45.75707,
+          "longitude": 4.8998
+        },
+        {
+          "id": "191134595",
+          "latitude": 45.75821,
+          "longitude": 4.8998857
+        },
+        {
+          "id": "191134606",
+          "latitude": 45.758266,
+          "longitude": 4.8969316
+        },
+        {
+          "id": "191134601",
+          "latitude": 45.75822,
+          "longitude": 4.8953905
+        },
+        {
+          "id": "55444018",
+          "latitude": 45.759853,
+          "longitude": 4.8953767
+        }
+      ],
+      "pathSegment": [
+        {
+          "origin": "245025987",
+          "destination": "1349383079",
+          "streetName": "Avenue des Colonnes",
+          "length": 99.56359
+        },
+        {
+          "origin": "245023124",
+          "destination": "245025987",
+          "streetName": "Avenue du Bois",
+          "length": 52.302273
+        },
+        {
+          "origin": "245023123",
+          "destination": "245023124",
+          "streetName": "Rue Jean Jaurès",
+          "length": 120.2091
+        },
+        {
+          "origin": "2292223595",
+          "destination": "245023123",
+          "streetName": "Rue Jean Jaurès",
+          "length": 70.26581
+        },
+        {
+          "origin": "2292223595",
+          "destination": "245023120",
+          "streetName": "Rue Jean Jaurès",
+          "length": 64.90494
+        },
+        {
+          "origin": "60901987",
+          "destination": "245023120",
+          "streetName": "Rue Jean Jaurès",
+          "length": 182.80875
+        },
+        {
+          "origin": "60901987",
+          "destination": "60901983",
+          "streetName": "Rue de la Paix",
+          "length": 143.89633
+        },
+        {
+          "origin": "60901982",
+          "destination": "60901983",
+          "streetName": "Rue de la Paix",
+          "length": 36.52154
+        },
+        {
+          "origin": "60901982",
+          "destination": "60901948",
+          "streetName": "Rue de la Paix",
+          "length": 41.994125
+        },
+        {
+          "origin": "245054847",
+          "destination": "60901948",
+          "streetName": "Rue de la Paix",
+          "length": 46.31201
+        },
+        {
+          "origin": "245054847",
+          "destination": "60901949",
+          "streetName": "Rue de la Paix",
+          "length": 63.36775
+        },
+        {
+          "origin": "2864851043",
+          "destination": "60901949",
+          "streetName": "Rue Pierre Bourdan",
+          "length": 167.81659
+        },
+        {
+          "origin": "2864851043",
+          "destination": "60901945",
+          "streetName": "Rue Pierre Bourdan",
+          "length": 141.66014
+        },
+        {
+          "origin": "60901945",
+          "destination": "60901944",
+          "streetName": "Avenue Franklin Roosevelt",
+          "length": 142.58736
+        },
+        {
+          "origin": "60901944",
+          "destination": "21715078",
+          "streetName": "Avenue Franklin Roosevelt",
+          "length": 85.61649
+        },
+        {
+          "origin": "194605193",
+          "destination": "21715078",
+          "streetName": "Avenue Franklin Roosevelt",
+          "length": 31.737026
+        },
+        {
+          "origin": "194605193",
+          "destination": "657813231",
+          "streetName": "Avenue Franklin Roosevelt",
+          "length": 28.853428
+        },
+        {
+          "origin": "657813231",
+          "destination": "657813243",
+          "streetName": "Avenue Franklin Roosevelt",
+          "length": 84.60947
+        },
+        {
+          "origin": "657813243",
+          "destination": "2453716845",
+          "streetName": "Boulevard Pinel",
+          "length": 118.62567
+        },
+        {
+          "origin": "2453716845",
+          "destination": "25610688",
+          "streetName": "Boulevard Pinel",
+          "length": 178.81972
+        },
+        {
+          "origin": "25610688",
+          "destination": "25610707",
+          "streetName": "Boulevard Pinel",
+          "length": 35.041103
+        },
+        {
+          "origin": "25610707",
+          "destination": "25611046",
+          "streetName": "Boulevard Pinel",
+          "length": 141.30153
+        },
+        {
+          "origin": "25611046",
+          "destination": "25611052",
+          "streetName": "Boulevard Pinel",
+          "length": 10.298906
+        },
+        {
+          "origin": "25611054",
+          "destination": "25611052",
+          "streetName": "Boulevard Pinel",
+          "length": 30.305285
+        },
+        {
+          "origin": "25611054",
+          "destination": "25610743",
+          "streetName": "Boulevard Pinel",
+          "length": 142.73347
+        },
+        {
+          "origin": "25611151",
+          "destination": "25610743",
+          "streetName": "Boulevard Pinel",
+          "length": 178.05112
+        },
+        {
+          "origin": "25611153",
+          "destination": "25611151",
+          "streetName": "Boulevard Pinel",
+          "length": 122.48935
+        },
+        {
+          "origin": "25611155",
+          "destination": "25611153",
+          "streetName": "Boulevard Pinel",
+          "length": 124.91089
+        },
+        {
+          "origin": "1921810545",
+          "destination": "25611155",
+          "streetName": "Boulevard Pinel",
+          "length": 30.355381
+        },
+        {
+          "origin": "25611156",
+          "destination": "1921810545",
+          "streetName": "Boulevard Pinel",
+          "length": 90.22135
+        },
+        {
+          "origin": "2202205400",
+          "destination": "25611156",
+          "streetName": "Boulevard Pinel",
+          "length": 66.17866
+        },
+        {
+          "origin": "2202205400",
+          "destination": "25611158",
+          "streetName": "Boulevard Pinel",
+          "length": 26.85869
+        },
+        {
+          "origin": "25611158",
+          "destination": "1370403183",
+          "streetName": "Rue du Vinatier",
+          "length": 98.57395
+        },
+        {
+          "origin": "1370403183",
+          "destination": "25611209",
+          "streetName": "Rue du Vinatier",
+          "length": 45.07846
+        },
+        {
+          "origin": "25611209",
+          "destination": "624172877",
+          "streetName": "Rue du Vinatier",
+          "length": 30.741154
+        },
+        {
+          "origin": "624172877",
+          "destination": "25611211",
+          "streetName": "Rue du Vinatier",
+          "length": 101.240425
+        },
+        {
+          "origin": "25611211",
+          "destination": "25611212",
+          "streetName": "Route de Genas",
+          "length": 19.433325
+        },
+        {
+          "origin": "25611212",
+          "destination": "4146048139",
+          "streetName": "Rue Émile Decorps",
+          "length": 15.892542
+        },
+        {
+          "origin": "1370403192",
+          "destination": "4146048139",
+          "streetName": "Rue Émile Decorps",
+          "length": 60.12354
+        },
+        {
+          "origin": "2284488019",
+          "destination": "1370403192",
+          "streetName": "Rue Émile Decorps",
+          "length": 117.10929
+        },
+        {
+          "origin": "2284488019",
+          "destination": "191134429",
+          "streetName": "Rue Émile Decorps",
+          "length": 65.13197
+        },
+        {
+          "origin": "505061092",
+          "destination": "191134429",
+          "streetName": "Rue Émile Decorps",
+          "length": 195.15364
+        },
+        {
+          "origin": "505061092",
+          "destination": "505061101",
+          "streetName": "Rue Émile Decorps",
+          "length": 24.685703
+        },
+        {
+          "origin": "191134595",
+          "destination": "505061101",
+          "streetName": "Rue Émile Decorps",
+          "length": 126.782524
+        },
+        {
+          "origin": "191134595",
+          "destination": "191134606",
+          "streetName": "Rue Antoine Primat",
+          "length": 229.41527
+        },
+        {
+          "origin": "191134606",
+          "destination": "191134601",
+          "streetName": "Rue Antoine Primat",
+          "length": 119.70782
+        },
+        {
+          "origin": "191134601",
+          "destination": "55444018",
+          "streetName": "Rue Louis Ducroize",
+          "length": 181.73573
+        }
+      ],
+      "distance": 4332.02319,
+      "travelTime": 1040
+    },
+    {
+      "from": {
+        "node": {
+          "id": "55444018",
+          "latitude": 45.759853,
+          "longitude": 4.8953767
+        },
+        "serviceDuration": 60,
+        "type": "PICKUP",
+        "demand": {
+          "id": 2,
+          "pickupAddress": "55444018",
+          "deliveryAddress": "26470086",
+          "pickupDuration": 60,
+          "deliveryDuration": 420
+        },
+        "relatedTourPoint": "26470086"
+      },
+      "to": {
+        "node": {
+          "id": "26470086",
+          "latitude": 45.749653,
+          "longitude": 4.895372
+        },
+        "serviceDuration": 420,
+        "type": "DELIVERY",
+        "demand": {
+          "id": 2,
+          "pickupAddress": "55444018",
+          "deliveryAddress": "26470086",
+          "pickupDuration": 60,
+          "deliveryDuration": 420
+        },
+        "relatedTourPoint": "55444018"
+      },
+      "pathNode": [
+        {
+          "id": "55444018",
+          "latitude": 45.759853,
+          "longitude": 4.8953767
+        },
+        {
+          "id": "191134601",
+          "latitude": 45.75822,
+          "longitude": 4.8953905
+        },
+        {
+          "id": "191134606",
+          "latitude": 45.758266,
+          "longitude": 4.8969316
+        },
+        {
+          "id": "191134595",
+          "latitude": 45.75821,
+          "longitude": 4.8998857
+        },
+        {
+          "id": "505061101",
+          "latitude": 45.75707,
+          "longitude": 4.8998
+        },
+        {
+          "id": "505061092",
+          "latitude": 45.75685,
+          "longitude": 4.8997655
+        },
+        {
+          "id": "191134429",
+          "latitude": 45.755123,
+          "longitude": 4.899358
+        },
+        {
+          "id": "2284488019",
+          "latitude": 45.75455,
+          "longitude": 4.8991904
+        },
+        {
+          "id": "1370403192",
+          "latitude": 45.753563,
+          "longitude": 4.8986764
+        },
+        {
+          "id": "4146048139",
+          "latitude": 45.753048,
+          "longitude": 4.898444
+        },
+        {
+          "id": "25611212",
+          "latitude": 45.752914,
+          "longitude": 4.898419
+        },
+        {
+          "id": "25611211",
+          "latitude": 45.75276,
+          "longitude": 4.8982906
+        },
+        {
+          "id": "624172877",
+          "latitude": 45.7519,
+          "longitude": 4.897871
+        },
+        {
+          "id": "25611209",
+          "latitude": 45.75164,
+          "longitude": 4.8977337
+        },
+        {
+          "id": "1370403183",
+          "latitude": 45.751247,
+          "longitude": 4.8975964
+        },
+        {
+          "id": "25611158",
+          "latitude": 45.75038,
+          "longitude": 4.8973455
+        },
+        {
+          "id": "2202205400",
+          "latitude": 45.75017,
+          "longitude": 4.8971896
+        },
+        {
+          "id": "25611156",
+          "latitude": 45.74958,
+          "longitude": 4.8970795
+        },
+        {
+          "id": "26470087",
+          "latitude": 45.74963,
+          "longitude": 4.896022
+        },
+        {
+          "id": "26470086",
+          "latitude": 45.749653,
+          "longitude": 4.895372
+        }
+      ],
+      "pathSegment": [
+        {
+          "origin": "191134601",
+          "destination": "55444018",
+          "streetName": "Rue Louis Ducroize",
+          "length": 181.73573
+        },
+        {
+          "origin": "191134606",
+          "destination": "191134601",
+          "streetName": "Rue Antoine Primat",
+          "length": 119.70782
+        },
+        {
+          "origin": "191134595",
+          "destination": "191134606",
+          "streetName": "Rue Antoine Primat",
+          "length": 229.41527
+        },
+        {
+          "origin": "191134595",
+          "destination": "505061101",
+          "streetName": "Rue Émile Decorps",
+          "length": 126.782524
+        },
+        {
+          "origin": "505061092",
+          "destination": "505061101",
+          "streetName": "Rue Émile Decorps",
+          "length": 24.685703
+        },
+        {
+          "origin": "505061092",
+          "destination": "191134429",
+          "streetName": "Rue Émile Decorps",
+          "length": 195.15364
+        },
+        {
+          "origin": "2284488019",
+          "destination": "191134429",
+          "streetName": "Rue Émile Decorps",
+          "length": 65.13197
+        },
+        {
+          "origin": "2284488019",
+          "destination": "1370403192",
+          "streetName": "Rue Émile Decorps",
+          "length": 117.10929
+        },
+        {
+          "origin": "1370403192",
+          "destination": "4146048139",
+          "streetName": "Rue Émile Decorps",
+          "length": 60.12354
+        },
+        {
+          "origin": "25611212",
+          "destination": "4146048139",
+          "streetName": "Rue Émile Decorps",
+          "length": 15.892542
+        },
+        {
+          "origin": "25611211",
+          "destination": "25611212",
+          "streetName": "Route de Genas",
+          "length": 19.433325
+        },
+        {
+          "origin": "624172877",
+          "destination": "25611211",
+          "streetName": "Rue du Vinatier",
+          "length": 101.240425
+        },
+        {
+          "origin": "25611209",
+          "destination": "624172877",
+          "streetName": "Rue du Vinatier",
+          "length": 30.741154
+        },
+        {
+          "origin": "1370403183",
+          "destination": "25611209",
+          "streetName": "Rue du Vinatier",
+          "length": 45.07846
+        },
+        {
+          "origin": "25611158",
+          "destination": "1370403183",
+          "streetName": "Rue du Vinatier",
+          "length": 98.57395
+        },
+        {
+          "origin": "2202205400",
+          "destination": "25611158",
+          "streetName": "Boulevard Pinel",
+          "length": 26.85869
+        },
+        {
+          "origin": "2202205400",
+          "destination": "25611156",
+          "streetName": "Boulevard Pinel",
+          "length": 66.17866
+        },
+        {
+          "origin": "26470087",
+          "destination": "25611156",
+          "streetName": "Rue Bellevue",
+          "length": 82.28692
+        },
+        {
+          "origin": "26470086",
+          "destination": "26470087",
+          "streetName": "Rue Bellevue",
+          "length": 50.5096
+        }
+      ],
+      "distance": 1656.6392130000002,
+      "travelTime": 398
+    },
+    {
+      "from": {
+        "node": {
+          "id": "26470086",
+          "latitude": 45.749653,
+          "longitude": 4.895372
+        },
+        "serviceDuration": 420,
+        "type": "DELIVERY",
+        "demand": {
+          "id": 2,
+          "pickupAddress": "55444018",
+          "deliveryAddress": "26470086",
+          "pickupDuration": 60,
+          "deliveryDuration": 420
+        },
+        "relatedTourPoint": "55444018"
+      },
+      "to": {
+        "node": {
+          "id": "1349383079",
+          "latitude": 45.731087,
+          "longitude": 4.9053183
+        },
+        "serviceDuration": 0,
+        "type": "WAREHOUSE",
+        "demand": null,
+        "relatedTourPoint": null
+      },
+      "pathNode": [
+        {
+          "id": "26470086",
+          "latitude": 45.749653,
+          "longitude": 4.895372
+        },
+        {
+          "id": "26470085",
+          "latitude": 45.74955,
+          "longitude": 4.895065
+        },
+        {
+          "id": "25611153",
+          "latitude": 45.747414,
+          "longitude": 4.89657
+        },
+        {
+          "id": "25611151",
+          "latitude": 45.74634,
+          "longitude": 4.8962135
+        },
+        {
+          "id": "25610743",
+          "latitude": 45.74484,
+          "longitude": 4.895428
+        },
+        {
+          "id": "25611054",
+          "latitude": 45.743637,
+          "longitude": 4.8947797
+        },
+        {
+          "id": "25611052",
+          "latitude": 45.743412,
+          "longitude": 4.8945613
+        },
+        {
+          "id": "25611046",
+          "latitude": 45.74332,
+          "longitude": 4.8945346
+        },
+        {
+          "id": "25610707",
+          "latitude": 45.742126,
+          "longitude": 4.8939195
+        },
+        {
+          "id": "25610688",
+          "latitude": 45.741886,
+          "longitude": 4.8938003
+        },
+        {
+          "id": "2453716845",
+          "latitude": 45.74038,
+          "longitude": 4.8929963
+        },
+        {
+          "id": "657813243",
+          "latitude": 45.739384,
+          "longitude": 4.892452
+        },
+        {
+          "id": "657813231",
+          "latitude": 45.73877,
+          "longitude": 4.8930063
+        },
+        {
+          "id": "194605193",
+          "latitude": 45.738644,
+          "longitude": 4.893329
+        },
+        {
+          "id": "21715078",
+          "latitude": 45.738525,
+          "longitude": 4.8937016
+        },
+        {
+          "id": "60901944",
+          "latitude": 45.738197,
+          "longitude": 4.8946996
+        },
+        {
+          "id": "60901945",
+          "latitude": 45.737644,
+          "longitude": 4.8963575
+        },
+        {
+          "id": "2864851043",
+          "latitude": 45.73638,
+          "longitude": 4.8961105
+        },
+        {
+          "id": "60901949",
+          "latitude": 45.73489,
+          "longitude": 4.8958178
+        },
+        {
+          "id": "245054847",
+          "latitude": 45.73461,
+          "longitude": 4.896528
+        },
+        {
+          "id": "60901948",
+          "latitude": 45.73438,
+          "longitude": 4.8970246
+        },
+        {
+          "id": "60901982",
+          "latitude": 45.734184,
+          "longitude": 4.8974867
+        },
+        {
+          "id": "60901983",
+          "latitude": 45.734013,
+          "longitude": 4.897888
+        },
+        {
+          "id": "60901987",
+          "latitude": 45.73325,
+          "longitude": 4.8993382
+        },
+        {
+          "id": "245023120",
+          "latitude": 45.732418,
+          "longitude": 4.901371
+        },
+        {
+          "id": "2292223595",
+          "latitude": 45.73208,
+          "longitude": 4.902046
+        },
+        {
+          "id": "245023123",
+          "latitude": 45.731644,
+          "longitude": 4.9027042
+        },
+        {
+          "id": "245023124",
+          "latitude": 45.730904,
+          "longitude": 4.903831
+        },
+        {
+          "id": "245025987",
+          "latitude": 45.73134,
+          "longitude": 4.9040866
+        },
+        {
+          "id": "1349383079",
+          "latitude": 45.731087,
+          "longitude": 4.9053183
+        }
+      ],
+      "pathSegment": [
+        {
+          "origin": "26470085",
+          "destination": "26470086",
+          "streetName": "Rue Jules Massenet",
+          "length": 26.563345
+        },
+        {
+          "origin": "26470085",
+          "destination": "25611153",
+          "streetName": "Rue Chambovet",
+          "length": 265.46426
+        },
+        {
+          "origin": "25611153",
+          "destination": "25611151",
+          "streetName": "Boulevard Pinel",
+          "length": 122.48935
+        },
+        {
+          "origin": "25611151",
+          "destination": "25610743",
+          "streetName": "Boulevard Pinel",
+          "length": 178.05112
+        },
+        {
+          "origin": "25611054",
+          "destination": "25610743",
+          "streetName": "Boulevard Pinel",
+          "length": 142.73347
+        },
+        {
+          "origin": "25611054",
+          "destination": "25611052",
+          "streetName": "Boulevard Pinel",
+          "length": 30.305285
+        },
+        {
+          "origin": "25611046",
+          "destination": "25611052",
+          "streetName": "Boulevard Pinel",
+          "length": 10.298906
+        },
+        {
+          "origin": "25610707",
+          "destination": "25611046",
+          "streetName": "Boulevard Pinel",
+          "length": 141.30153
+        },
+        {
+          "origin": "25610688",
+          "destination": "25610707",
+          "streetName": "Boulevard Pinel",
+          "length": 35.041103
+        },
+        {
+          "origin": "2453716845",
+          "destination": "25610688",
+          "streetName": "Boulevard Pinel",
+          "length": 178.81972
+        },
+        {
+          "origin": "657813243",
+          "destination": "2453716845",
+          "streetName": "Boulevard Pinel",
+          "length": 118.62567
+        },
+        {
+          "origin": "657813231",
+          "destination": "657813243",
+          "streetName": "Avenue Franklin Roosevelt",
+          "length": 84.60947
+        },
+        {
+          "origin": "194605193",
+          "destination": "657813231",
+          "streetName": "Avenue Franklin Roosevelt",
+          "length": 28.853428
+        },
+        {
+          "origin": "194605193",
+          "destination": "21715078",
+          "streetName": "Avenue Franklin Roosevelt",
+          "length": 31.737026
+        },
+        {
+          "origin": "60901944",
+          "destination": "21715078",
+          "streetName": "Avenue Franklin Roosevelt",
+          "length": 85.61649
+        },
+        {
+          "origin": "60901945",
+          "destination": "60901944",
+          "streetName": "Avenue Franklin Roosevelt",
+          "length": 142.58736
+        },
+        {
+          "origin": "2864851043",
+          "destination": "60901945",
+          "streetName": "Rue Pierre Bourdan",
+          "length": 141.66014
+        },
+        {
+          "origin": "2864851043",
+          "destination": "60901949",
+          "streetName": "Rue Pierre Bourdan",
+          "length": 167.81659
+        },
+        {
+          "origin": "245054847",
+          "destination": "60901949",
+          "streetName": "Rue de la Paix",
+          "length": 63.36775
+        },
+        {
+          "origin": "245054847",
+          "destination": "60901948",
+          "streetName": "Rue de la Paix",
+          "length": 46.31201
+        },
+        {
+          "origin": "60901982",
+          "destination": "60901948",
+          "streetName": "Rue de la Paix",
+          "length": 41.994125
+        },
+        {
+          "origin": "60901982",
+          "destination": "60901983",
+          "streetName": "Rue de la Paix",
+          "length": 36.52154
+        },
+        {
+          "origin": "60901987",
+          "destination": "60901983",
+          "streetName": "Rue de la Paix",
+          "length": 143.89633
+        },
+        {
+          "origin": "60901987",
+          "destination": "245023120",
+          "streetName": "Rue Jean Jaurès",
+          "length": 182.80875
+        },
+        {
+          "origin": "2292223595",
+          "destination": "245023120",
+          "streetName": "Rue Jean Jaurès",
+          "length": 64.90494
+        },
+        {
+          "origin": "2292223595",
+          "destination": "245023123",
+          "streetName": "Rue Jean Jaurès",
+          "length": 70.26581
+        },
+        {
+          "origin": "245023123",
+          "destination": "245023124",
+          "streetName": "Rue Jean Jaurès",
+          "length": 120.2091
+        },
+        {
+          "origin": "245023124",
+          "destination": "245025987",
+          "streetName": "Avenue du Bois",
+          "length": 52.302273
+        },
+        {
+          "origin": "245025987",
+          "destination": "1349383079",
+          "streetName": "Avenue des Colonnes",
+          "length": 99.56359
+        }
+      ],
+      "distance": 2854.7204810000003,
+      "travelTime": 686
+    }
+  ],
+  "totalDuration": 2604,
+  "totalDistance": 8843.382884
+}

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test DisplayTour</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        #map {
+            height: 600px;
+            width: 100%;
+            border: 2px solid #333;
+        }
+
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Test de la classe View (Tour)</h1>
+    <div class="controls">
+        <button onclick="showExampleTour()">Afficher une tournée d'exemple</button>
+        <button onclick="view.clearMap()">Effacer la carte</button>
+    </div>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="/backend/node.js"></script>
+    <script src="/backend/segment.js"></script>
+    <script src="/backend/courier.js"></script>
+    <script src="/backend/demand.js"></script>
+    <script src="/backend/tourpoint.js"></script>
+    <script src="/backend/leg.js"></script>
+    <script src="/backend/tours.js"></script>
+    <script src="front/scripts/view.js"></script>
+
+    <script>
+        const view = new View("08:00", 'map');
+
+        function showExampleTour() {
+            console.log('Creating example tour...');
+
+            // Create nodes
+            const node1 = new Node("1", 45.75406, 4.857418, []);
+            const node2 = new Node("2", 45.75343, 4.8574653, []);
+            const node3 = new Node("3", 45.75425, 4.8591485, []);
+            const node4 = new Node("4", 45.753757, 4.8601513, []);
+            const node5 = new Node("5", 45.754536, 4.866525, []);
+
+            // Create segments
+            const seg1 = new Segment(node1, node2, "Rue Danton", 69.98);
+            const seg2 = new Segment(node2, node3, "Rue de l'Abondance", 136.01);
+            const seg3 = new Segment(node3, node4, "Rue de l'Abondance", 45.5);
+            const seg4 = new Segment(node4, node5, "Avenue Félix Faure", 180.5);
+            const seg5 = new Segment(node5, node1, "Rue Danton", 200.3);
+
+            node1.segments = [seg1];
+            node2.segments = [seg2];
+            node3.segments = [seg3];
+            node4.segments = [seg4];
+            node5.segments = [seg5];
+
+            // Create demands
+            const demand1 = new Demand(node2, node3, 300, 240);
+            const demand2 = new Demand(node4, node5, 180, 300);
+
+            // Create courier
+            const courier = new Courier(null, "Jean Dupont");
+
+            // Create tour
+            const tour = new Tour(null, "08:00", courier);
+
+            // Create stops
+            const warehouse = new TourPoint(node1, 0, TypePoint.WAREHOUSE, null);
+            const pickup1 = new TourPoint(node2, 300, TypePoint.PICKUP, demand1);
+            const delivery1 = new TourPoint(node3, 240, TypePoint.DELIVERY, demand1);
+            const pickup2 = new TourPoint(node4, 180, TypePoint.PICKUP, demand2);
+            const delivery2 = new TourPoint(node5, 300, TypePoint.DELIVERY, demand2);
+            const warehouseReturn = new TourPoint(node1, 0, TypePoint.WAREHOUSE, null);
+
+            tour.addStop(warehouse);
+            tour.addStop(pickup1);
+            tour.addStop(delivery1);
+            tour.addStop(pickup2);
+            tour.addStop(delivery2);
+            tour.addStop(warehouseReturn);
+
+            // Create legs
+            tour.addLeg(new Leg(warehouse, pickup1, [node1, node2], [], 69.98, 17));
+            tour.addLeg(new Leg(pickup1, delivery1, [node2, node3], [], 136.01, 33));
+            tour.addLeg(new Leg(delivery1, pickup2, [node3, node4], [], 45.5, 11));
+            tour.addLeg(new Leg(pickup2, delivery2, [node4, node5], [], 180.5, 43));
+            tour.addLeg(new Leg(delivery2, warehouseReturn, [node5, node1], [], 200.3, 48));
+
+            tour.calculateTotalDistance();
+            tour.calculateTotalDuration();
+
+            console.log('Tour created:', tour);
+            view.displayTour(tour);
+            console.log('Tour displayed!');
+        }
+
+        window.addEventListener('load', () => setTimeout(showExampleTour, 500));
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,609 @@
+<!-- /c:/Users/Josue/Downloads/AGILE/front/test/test_tour1.html -->
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Test: Tour de livraison</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, Segoe UI, Roboto, Arial;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #333;
+            margin-top: 0;
+        }
+
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 18px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            margin-top: 0;
+            margin-bottom: 12px;
+            color: #2c3e50;
+            font-size: 18px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 8px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+
+        input[type="file"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 16px;
+            cursor: pointer;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        button.success {
+            background: #27ae60;
+        }
+
+        button.success:hover {
+            background: #229954;
+        }
+
+        button.danger {
+            background: #e74c3c;
+        }
+
+        button.danger:hover {
+            background: #c0392b;
+        }
+
+        #planPreview,
+        #demandsPreview {
+            border: 1px solid #ddd;
+            padding: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            border-radius: 4px;
+            background: #fafafa;
+        }
+
+        .step {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .step:last-child {
+            border-bottom: none;
+        }
+
+        .step strong {
+            color: #2c3e50;
+        }
+
+        .small {
+            font-size: 13px;
+            color: #7f8c8d;
+            margin-top: 4px;
+        }
+
+        #mapContainer {
+            height: 400px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 12px 0;
+        }
+
+        .info-box {
+            background: #ecf0f1;
+            border-left: 4px solid #3498db;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 4px;
+        }
+
+        .info-box.warning {
+            border-left-color: #f39c12;
+            background: #fef5e7;
+        }
+
+        .info-box.success {
+            border-left-color: #27ae60;
+            background: #eafaf1;
+        }
+
+        .tour-label {
+            background-color: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            font-weight: bold !important;
+            color: white !important;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7) !important;
+            font-size: 14px !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🚚 Planificateur de Tours de Livraison</h1>
+
+        <!-- Section 1: Load Plan -->
+        <div class="section">
+            <h2>1️⃣ Charger la Carte du Plan</h2>
+            <div class="controls">
+                <input id="planFileInput" type="file" accept=".xml" />
+                <button id="btnLoadPlan">Charger la Carte</button>
+            </div>
+            <div id="planPreview"><em>📁 Aucune carte chargée</em></div>
+        </div>
+
+        <!-- Section 2: Load Demands -->
+        <div class="section">
+            <h2>2️⃣ Charger les Demandes de Livraison</h2>
+            <div class="controls">
+                <input id="demandsFileInput" type="file" accept=".xml" />
+                <button id="btnLoadDemands" disabled>Charger les Demandes</button>
+                <button id="btnClearDemands" class="danger" disabled>Effacer</button>
+            </div>
+            <div id="demandsPreview"><em>📦 Aucune demande chargée</em></div>
+        </div>
+
+        <!-- Section 3: Map Display -->
+        <div class="section">
+            <h2>🗺️ Visualisation de la Carte</h2>
+            <div id="mapContainer"></div>
+        </div>
+
+        <!-- Section 4: Compute and Display Tour -->
+        <div class="section">
+            <h2>3️⃣ Créer et Afficher le Tour</h2>
+            <div class="controls">
+                <button id="btnComputeTour" class="success" disabled>Calculer le Tour</button>
+                <button id="btnClearTour" class="danger" disabled>Effacer le Tour</button>
+            </div>
+            <div id="tourInfo"></div>
+        </div>
+    </div>
+
+    <!-- Backend Scripts -->
+    <script src="/backend/demand.js"></script>
+    <script src="/backend/courier.js"></script>
+    <script src="/backend/node.js"></script>
+    <script src="/backend/segment.js"></script>
+    <script src="/backend/plan.js"></script>
+    <script src="/backend/tours.js"></script>
+    <script src="/backend/leg.js"></script>
+    <script src="/backend/tourpoint.js"></script>
+    <script src="/backend/system.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <script>
+        let system = new System();
+        let map = null;
+        let currentTour = null;
+        let tourPolylines = [];
+        let tourMarkers = [];
+
+        const planFileInput = document.getElementById('planFileInput');
+        const demandsFileInput = document.getElementById('demandsFileInput');
+        const btnLoadPlan = document.getElementById('btnLoadPlan');
+        const btnLoadDemands = document.getElementById('btnLoadDemands');
+        const btnClearDemands = document.getElementById('btnClearDemands');
+        const btnComputeTour = document.getElementById('btnComputeTour');
+        const btnClearTour = document.getElementById('btnClearTour');
+        const planPreview = document.getElementById('planPreview');
+        const demandsPreview = document.getElementById('demandsPreview');
+        const tourInfo = document.getElementById('tourInfo');
+
+        // Initialize map
+        function initMap() {
+            if (map) {
+                map.remove();
+            }
+            map = L.map('mapContainer').setView([48.8566, 2.3522], 12);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+        }
+
+        // Load Plan
+        btnLoadPlan.addEventListener('click', async () => {
+            const file = planFileInput.files[0];
+            if (!file) {
+                alert('Sélectionnez un fichier XML de carte');
+                return;
+            }
+            try {
+                const result = await system.loadPlan({ files: [file] });
+                if (result.success) {
+                    renderPlanPreview();
+                    initMap();
+                    displayPlanOnMap();
+                    btnLoadDemands.disabled = false;
+                    showInfo('✅ Carte chargée correctement', 'success');
+                } else {
+                    alert('Erreur: ' + result.error);
+                }
+            } catch (err) {
+                alert('Erreur lors du chargement de la carte: ' + err.message);
+            }
+        });
+
+        // Load Demands
+        btnLoadDemands.addEventListener('click', async () => {
+            const file = demandsFileInput.files[0];
+            if (!file) {
+                alert('Sélectionnez un fichier XML de demandes');
+                return;
+            }
+            try {
+                const text = await file.text();
+                const xmlDoc = new DOMParser().parseFromString(text, 'application/xml');
+
+                // Load warehouse
+                const entrepots = xmlDoc.getElementsByTagName('entrepot');
+                if (entrepots.length > 0) {
+                    const warehouseId = entrepots[0].getAttribute('adresse');
+                    if (warehouseId) {
+                        const warehouseNode = system.plan.nodes.get(warehouseId);
+                        if (warehouseNode) {
+                            system.plan.warehouse = warehouseNode;
+                        }
+                    }
+                }
+
+                // Load demands
+                const livraisons = xmlDoc.getElementsByTagName('livraison');
+                Array.from(livraisons).forEach(node => {
+                    const pickup = node.getAttribute('adresseEnlevement');
+                    const delivery = node.getAttribute('adresseLivraison');
+                    const pickupDur = Number(node.getAttribute('dureeEnlevement')) || 0;
+                    const deliveryDur = Number(node.getAttribute('dureeLivraison')) || 0;
+                    system.addDemand(pickup, delivery, pickupDur, deliveryDur);
+                });
+
+                renderDemandsPreview();
+                displayDemandsOnMap();
+                btnComputeTour.disabled = false;
+                btnClearDemands.disabled = false;
+                showInfo(`✅ ${system.demandsList.length} demandes chargées correctement`, 'success');
+            } catch (err) {
+                alert('Erreur lors du chargement des demandes: ' + err.message);
+            }
+        });
+
+        // Clear Demands
+        btnClearDemands.addEventListener('click', () => {
+            system.demandsList = [];
+            system.toursList = [];
+            demandsPreview.innerHTML = '<em>📦 Aucune demande</em>';
+            tourInfo.innerHTML = '';
+            btnComputeTour.disabled = true;
+            btnClearDemands.disabled = true;
+            btnClearTour.disabled = true;
+            clearTourFromMap();
+            showInfo('Demandes supprimées', 'warning');
+        });
+
+        // Compute Tour
+        btnComputeTour.addEventListener('click', () => {
+            if (!system.plan || !system.plan.warehouse) {
+                alert('Vous devez charger la carte ou aucun entrepôt n\'existe');
+                return;
+            }
+            if (system.demandsList.length == 0) {
+                alert('Aucune demande chargée');
+                return;
+            }
+
+            try {
+                console.log(`Calcul du tour pour ${system.demandsList.length} demandes...`);
+
+                let courier = new Object();
+                courier.id = 'courier_1';
+                courier.name = 'Repartidor 1';
+                system.listCouriers.push(courier);
+
+                let tours = system.calculateTour(system.demandsList);
+
+                if (!tours || tours.length === 0) {
+                    alert('Erreur lors de la création du tour - aucune route générée');
+                    return;
+                }
+
+                currentTour = tours[0];
+                console.log('Tour calculé:', {
+                    stops: currentTour.stops?.length || 0,
+                    distance: currentTour.calculateTotalDistance(),
+                    courier: currentTour.courier?.id
+                });
+
+                // Draw tour on map
+                drawTourOnMap();
+
+                showInfo(`✅ Tour calculé: ${currentTour.stops.length} arrêts | Distance: ${(currentTour.totalDistance || 0).toFixed(2)} unités`, 'success');
+                btnClearTour.disabled = false;
+            } catch (err) {
+                console.error('Erreur en computeTour:', err);
+                alert('Erreur lors du calcul du tour: ' + err.message);
+            }
+        });
+
+        // Clear Tour
+        btnClearTour.addEventListener('click', () => {
+            clearTourFromMap();
+            currentTour = null;
+            tourInfo.innerHTML = '';
+            btnClearTour.disabled = true;
+            showInfo('Tour supprimé de la carte', 'warning');
+        });
+
+        function drawTourOnMap() {
+            if (!currentTour || !currentTour.stops || currentTour.stops.length === 0) return;
+
+            // Clear only tour markers and polylines, keep base map (nodes and segments)
+            clearTourFromMap();
+
+            const routeCoordinates = [];
+
+            // Start from warehouse
+            if (system.plan.warehouse) {
+                routeCoordinates.push([system.plan.warehouse.latitude, system.plan.warehouse.longitude]);
+
+                // Mark warehouse
+                const warehouseMarker = L.circleMarker([system.plan.warehouse.latitude, system.plan.warehouse.longitude], {
+                    radius: 12,
+                    fillColor: '#27ae60',
+                    color: '#fff',
+                    weight: 3,
+                    opacity: 1,
+                    fillOpacity: 0.9
+                }).addTo(map);
+
+                const label = L.tooltip({
+                    permanent: true,
+                    direction: 'center',
+                    className: 'tour-label'
+                }).setContent('🏪');
+                warehouseMarker.bindTooltip(label);
+                warehouseMarker.bindPopup(`<b>Entrepôt</b><br>${system.plan.warehouse.id}`);
+                tourMarkers.push(warehouseMarker);
+            }
+
+            // Add all stops
+            currentTour.stops.forEach((stop, i) => {
+                const node = stop.address || system.plan.nodes.get(stop.id);
+                if (node) {
+                    routeCoordinates.push([node.latitude, node.longitude]);
+
+                    // Determine stop type
+                    let color = '#3498db';
+                    let icon = '📍';
+                    system.demandsList.forEach(demand => {
+                        const pickupId = demand.pickupAddress.id || demand.pickupAddress;
+                        const deliveryId = demand.deliveryAddress.id || demand.deliveryAddress;
+                        if (stop.id === pickupId) {
+                            color = '#f39c12';
+                            icon = '📦';
+                        } else if (stop.id === deliveryId) {
+                            color = '#e74c3c';
+                            icon = '🎯';
+                        }
+                    });
+
+                    // Mark stop
+                    const marker = L.circleMarker([node.latitude, node.longitude], {
+                        radius: 8,
+                        fillColor: color,
+                        color: '#fff',
+                        weight: 2,
+                        opacity: 1,
+                        fillOpacity: 0.8
+                    }).addTo(map);
+
+                    const stopLabel = L.tooltip({
+                        permanent: true,
+                        direction: 'center',
+                        className: 'tour-label'
+                    }).setContent((i + 1).toString());
+                    marker.bindTooltip(stopLabel);
+                    marker.bindPopup(`<b>Arrêt ${i + 1}</b><br>${icon} ${stop.id}`);
+                    tourMarkers.push(marker);
+                }
+            });
+
+            // Return to warehouse
+            if (system.plan.warehouse) {
+                routeCoordinates.push([system.plan.warehouse.latitude, system.plan.warehouse.longitude]);
+            }
+
+            // Draw route polyline
+            if (routeCoordinates.length > 1) {
+                const line = L.polyline(routeCoordinates, {
+                    color: '#3498db',
+                    weight: 3,
+                    opacity: 0.8
+                }).addTo(map);
+                tourPolylines.push(line);
+
+                // Fit bounds to tour
+                const bounds = routeCoordinates.map(coord => [coord[0], coord[1]]);
+                map.fitBounds(bounds, { padding: [50, 50] });
+            }
+        }
+
+        function clearTourFromMap() {
+            tourMarkers.forEach(marker => {
+                try { map.removeLayer(marker); } catch (e) { }
+            });
+            tourMarkers = [];
+
+            tourPolylines.forEach(line => {
+                try { map.removeLayer(line); } catch (e) { }
+            });
+            tourPolylines = [];
+        }
+
+        function renderPlanPreview() {
+            if (!system.plan || !system.plan.nodes || system.plan.nodes.size === 0) {
+                planPreview.innerHTML = '<em>📁 Aucun nœud dans le plan</em>';
+                return;
+            }
+            planPreview.innerHTML = '';
+            const div = document.createElement('div');
+            div.className = 'step';
+            div.innerHTML = `<strong>Nœuds: ${system.plan.nodes.size}</strong><div class="small">Tronçons: ${system.plan.segments ? system.plan.segments.length : 0}</div>`;
+            planPreview.appendChild(div);
+        }
+
+        function renderDemandsPreview() {
+            if (system.demandsList.length === 0) {
+                demandsPreview.innerHTML = '<em>📦 Aucune demande</em>';
+                return;
+            }
+            demandsPreview.innerHTML = '';
+            system.demandsList.slice(0, 5).forEach((d, i) => {
+                const div = document.createElement('div');
+                div.className = 'step';
+                div.innerHTML = `<strong>${i + 1}. Enlevement ${d.pickupAddress} → Livraison ${d.deliveryAddress}</strong>`;
+                demandsPreview.appendChild(div);
+            });
+            if (system.demandsList.length > 5) {
+                const div = document.createElement('div');
+                div.className = 'step';
+                div.innerHTML = `<em>... et ${system.demandsList.length - 5} de plus</em>`;
+                demandsPreview.appendChild(div);
+            }
+        }
+
+        function displayPlanOnMap() {
+            if (!map || !system.plan || !system.plan.nodes) return;
+
+            // Convert nodes Map to Array
+            const nodes = Array.from(system.plan.nodes.values());
+
+            // Create sets to track special points
+            const pickupPoints = new Set();
+            const deliveryPoints = new Set();
+
+            // Collect all pickup and delivery addresses from demands
+            system.demandsList.forEach(demand => {
+                if (demand.pickupAddress) {
+                    const pickupId = demand.pickupAddress.id || demand.pickupAddress;
+                    pickupPoints.add(pickupId);
+                }
+                if (demand.deliveryAddress) {
+                    const deliveryId = demand.deliveryAddress.id || demand.deliveryAddress;
+                    deliveryPoints.add(deliveryId);
+                }
+            });
+
+            // Draw nodes with appropriate colors
+            nodes.forEach(node => {
+                let color = '#3498db'; // Default blue for other nodes
+                let radius = 4;
+                let label = `Nœud: ${node.id}`;
+
+                if (system.plan.warehouse && node.id === system.plan.warehouse.id) {
+                    color = '#27ae60'; // Green for warehouse
+                    radius = 8;
+                    label = `Entrepôt: ${node.id}`;
+                } else if (pickupPoints.has(node.id)) {
+                    color = '#f39c12'; // Yellow for pickup
+                    radius = 6;
+                    label = `Enlevement: ${node.id}`;
+                } else if (deliveryPoints.has(node.id)) {
+                    color = '#e74c3c'; // Red for delivery
+                    radius = 6;
+                    label = `Livraison: ${node.id}`;
+                }
+
+                L.circleMarker([node.latitude, node.longitude], {
+                    radius: radius,
+                    fillColor: color,
+                    color: '#fff',
+                    weight: 2,
+                    opacity: 1,
+                    fillOpacity: 0.9
+                }).addTo(map).bindPopup(label);
+            });
+
+            // Draw segments
+            if (system.plan.segments) {
+                system.plan.segments.forEach(seg => {
+                    if (seg.origin && seg.destination) {
+                        L.polyline([
+                            [seg.origin.latitude, seg.origin.longitude],
+                            [seg.destination.latitude, seg.destination.longitude]
+                        ], { color: '#95a5a6', weight: 2, opacity: 0.6 }).addTo(map);
+                    }
+                });
+            }
+
+            // Fit map bounds
+            if (nodes.length > 0) {
+                const bounds = nodes.map(n => [n.latitude, n.longitude]);
+                map.fitBounds(bounds, { padding: [50, 50] });
+            }
+        }
+
+        function displayDemandsOnMap() {
+            if (!map || !system.demandsList || system.demandsList.length === 0) return;
+            map.eachLayer((layer) => {
+                if (layer instanceof L.CircleMarker || layer instanceof L.Polyline) {
+                    map.removeLayer(layer);
+                }
+            });
+            displayPlanOnMap();
+        }
+
+        function showInfo(message, type = 'info') {
+            tourInfo.innerHTML = `<div class="info-box ${type === 'success' ? 'success' : type === 'warning' ? 'warning' : ''}">${message}</div>`;
+        }
+
+        // Initialize on load
+        initMap();
+    </script>
+</body>
+
+</html>

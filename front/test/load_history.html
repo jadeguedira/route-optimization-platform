@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>Historique des tournées</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    button { padding: 8px 12px; margin-right: 8px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 12px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background: #f4f4f4; }
+    .small { font-size: 0.9em; color: #666; }
+    #error { color: #b00020; margin-top: 12px; }
+  </style>
+</head>
+<body>
+  <h2>Historique des tournées</h2>
+
+  <div>
+    <button id="historyBtn">Historique</button>
+    <button id="refreshBtn">Rafraîchir</button>
+    <span class="small">Cliquez sur "Historique" pour lister les tournées sauvegardées.</span>
+  </div>
+
+  <div id="error" role="alert" aria-live="polite"></div>
+  <div id="results"></div>
+
+  <script>
+    // Attendu : endpoint backend qui liste les fichiers de saved_tours et retourne un tableau JSON.
+    // Format attendu d'un élément (exemples) :
+    // { filename: "tour_T_MULTI_001_2025-12-02_Marie-Martin.json", time: "09:30", courier: "Marie Martin", duration: 5280, distance: 5200 }
+    // Si seules les infos sont dans le nom de fichier, le client tente d'extraire quelques champs via regex.
+    const API_LIST = '/api/tours/list';
+
+    document.getElementById('historyBtn').addEventListener('click', loadHistory);
+    document.getElementById('refreshBtn').addEventListener('click', loadHistory);
+
+    async function loadHistory() {
+    clearError();
+    setLoading(true);
+    try {
+        const res = await fetch(API_LIST, { cache: 'no-store' });
+        if (!res.ok) throw new Error('Échec de la requête au backend (' + res.status + ')');
+
+        const data = await res.json();
+        if (!data.success) throw new Error(data.error || 'Erreur lors du chargement de la liste');
+
+        renderResults(data.tours || []);
+    } catch (err) {
+        showError(err.message);
+        renderResults([]); // vide
+    } finally {
+        setLoading(false);
+    }
+    }
+
+    function renderResults(items) {
+      const container = document.getElementById('results');
+      container.innerHTML = '';
+
+      if (!Array.isArray(items) || items.length === 0) {
+        container.innerHTML = '<p>Aucune tournée trouvée.</p>';
+        return;
+      }
+
+      const table = document.createElement('table');
+      const thead = document.createElement('thead');
+      thead.innerHTML = '<tr><th>Fichier</th><th>Heure</th><th>Courrier</th><th>Durée (min)</th><th>Distance (km)</th><th>Détails</th></tr>';
+      table.appendChild(thead);
+
+      const tbody = document.createElement('tbody');
+
+    items.forEach(it => {
+    const entry = normalizeItem(it);
+
+    const durationMinutes = entry.duration != null
+        ? (entry.duration / 60).toFixed(1)   // secondes -> minutes
+        : '';
+
+    const distanceKm = entry.distance != null
+        ? (entry.distance / 1000).toFixed(2) // mètres -> km
+        : '';
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+        <td>${escapeHtml(entry.filename || '')}</td>
+        <td>${escapeHtml(entry.time || '')}</td>
+        <td>${escapeHtml(entry.courier || '')}</td>
+        <td>${durationMinutes}</td>
+        <td>${distanceKm}</td>
+        <td><button data-file="${escapeHtml(entry.filename || '')}" class="detailsBtn">Voir</button></td>
+    `;
+    tbody.appendChild(tr);
+    });
+
+
+
+      table.appendChild(tbody);
+      container.appendChild(table);
+
+      // Détails click handler (chargement complet du fichier prévu plus tard)
+      container.querySelectorAll('.detailsBtn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const filename = e.currentTarget.dataset.file;
+          // Pour l'instant : afficher le nom de fichier choisi (la vue détaillée sera implémentée ultérieurement)
+          alert('Voir détails pour : ' + filename);
+        });
+      });
+    }
+
+    function normalizeItem(it) {
+    if (!it) {
+        return { filename: '', time: '', courier: '', duration: null, distance: null };
+    }
+
+    // Récupérer le nom de fichier, que ce soit un string ou un objet
+    const fname = typeof it === 'string'
+        ? it
+        : (it.filename || it.name || '');
+
+    // Si l'objet contient déjà des infos métier, on les utilise
+    const hasMeta =
+        typeof it === 'object' && (
+        it.time ||
+        it.departureTime ||
+        it.courier ||
+        (it.courier && typeof it.courier === 'object') ||
+        it.totalDuration != null ||
+        it.totalDistance != null ||
+        it.duration != null ||
+        it.distance != null
+        );
+
+    if (hasMeta) {
+        return {
+        filename: fname,
+        time: it.time || it.departureTime || it.date || '',
+        courier: (it.courier && typeof it.courier === 'object')
+            ? it.courier.name
+            : (it.courier || ''),
+        duration: it.totalDuration != null ? it.totalDuration
+                : (it.duration != null ? it.duration : null),
+        distance: it.totalDistance != null ? it.totalDistance
+                : (it.distance != null ? it.distance : null)
+        };
+    }
+
+    if (!fname) {
+        return { filename: '', time: '', courier: '', duration: null, distance: null };
+    }
+
+    // Enlever l’extension .json
+    const base = fname.replace(/\.json$/i, '');
+    const parts = base.split('_');
+
+    // Format : id_departureTime_courier_totalDuration_totalDistance
+    if (parts.length === 5) {
+        const [id, departureTimeRaw, courierRaw, totalDurationRaw, totalDistanceRaw] = parts;
+
+        return {
+        filename: fname,
+        // tu peux adapter pour afficher "08:00" au lieu de "08h00" si tu veux
+        time: departureTimeRaw,
+        courier: courierRaw.replace(/-/g, ' '),
+        duration: Number(totalDurationRaw),
+        distance: Number(totalDistanceRaw)
+        };
+    }
+
+    // fallback si le nom ne respecte pas le format
+    return { filename: fname, time: '', courier: '', duration: null, distance: null };
+    }
+
+    function showError(msg) {
+      document.getElementById('error').textContent = msg;
+    }
+    function clearError() { document.getElementById('error').textContent = ''; }
+    function setLoading(loading) {
+      document.getElementById('historyBtn').disabled = loading;
+      document.getElementById('refreshBtn').disabled = loading;
+    }
+
+    function escapeHtml(s) {
+      if (!s) return '';
+      return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+  </script>
+</body>
+</html>

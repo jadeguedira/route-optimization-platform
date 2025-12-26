@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo computeCompleteTour</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 24px; background: #f7f9fb; color: #2c3e50; }
+        h1 { font-size: 1.4rem; margin-bottom: 0.5rem; }
+        p { margin-top: 0; color: #34495e; }
+        button { padding: 8px 14px; border: none; background: #2c3e50; color: white; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #1b2733; }
+        pre { background: #ecf0f1; padding: 16px; border-radius: 6px; overflow: auto; }
+        .card { background: white; padding: 16px; border-radius: 8px; box-shadow: 0 3px 12px rgba(0,0,0,0.08); }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Test rapide : computeCompleteTour</h1>
+        <p>Ce mini-scenario construit un plan simple (3 nœuds), calcule une tournée ENTREPÔT → Pickup → Delivery → ENTREPÔT et affiche stops/legs.</p>
+        <button id="runBtn">Exécuter le scénario</button>
+        <pre id="output">Clique sur "Exécuter le scénario" pour lancer le test.</pre>
+    </div>
+
+    <!-- Charge les classes backend en mode navigateur -->
+    <script src="../../backend/node.js"></script>
+    <script src="../../backend/segment.js"></script>
+    <script src="../../backend/plan.js"></script>
+    <script src="../../backend/leg.js"></script>
+    <script src="../../backend/tourpoint.js"></script>
+    <script src="../../backend/tours.js"></script>
+    <script src="../../backend/courier.js"></script>
+    <script src="../../backend/computerTour.js"></script>
+
+    <script>
+        (function () {
+            function buildPlan() {
+                const n1 = new Node('A', 0, 0, []);
+                const n2 = new Node('B', 0, 1, []);
+                const n3 = new Node('C', 1, 1, []);
+
+                const s12 = new Segment(n1, n2, 'A-B', 1000);
+                const s23 = new Segment(n2, n3, 'B-C', 1200);
+                const s31 = new Segment(n3, n1, 'C-A', 1500);
+
+                n1.segments.push(s12);
+                n2.segments.push(s23);
+                n3.segments.push(s31);
+
+                const nodes = new Map([['A', n1], ['B', n2], ['C', n3]]);
+                return new Plan(nodes, [s12, s23, s31], n1);
+            }
+
+            function formatTour(tour) {
+                if (!tour) return 'Aucune tournée générée (chemin introuvable).';
+
+                const lines = [];
+                lines.push(`Courier: ${tour.courier ? tour.courier.name || tour.courier.id : 'none'}`);
+                lines.push('');
+                lines.push(`Stops (${tour.stops.length}):`);
+                tour.stops.forEach((s, idx) => {
+                    lines.push(`  ${idx + 1}. ${s.type} @ Node ${s.node.id} (service ${s.serviceDuration}s)`);
+                });
+
+                lines.push('');
+                lines.push(`Legs (${tour.legs.length}):`);
+                tour.legs.forEach((leg, idx) => {
+                    lines.push(`  ${idx + 1}. ${leg.from.node.id} -> ${leg.to.node.id} | ${leg.distance}m, ${leg.travelTime}s, ${leg.pathNode.length} nodes`);
+                });
+
+                lines.push('');
+                lines.push(`Total distance: ${tour.totalDistance} m`);
+                lines.push(`Total duration: ${tour.totalDuration} s`);
+                return lines.join('\n');
+            }
+
+            function runScenario() {
+                const plan = buildPlan();
+                const ct = new ComputerTour(plan);
+                const courier = new Courier('C1', 'Demo Courier');
+
+                const warehouse = new TourPoint(plan.warehouse, 0, TypePoint.WAREHOUSE, null);
+                const pickup = new TourPoint(plan.nodes.get('B'), 300, TypePoint.PICKUP, { id: 'D1' });
+                const delivery = new TourPoint(plan.nodes.get('C'), 300, TypePoint.DELIVERY, { id: 'D1' });
+                pickup.relatedTourPoint = delivery;
+                delivery.relatedTourPoint = pickup;
+
+                const tour = ct.computeCompleteTour([warehouse, pickup, delivery, warehouse], courier);
+                const output = document.getElementById('output');
+                output.textContent = formatTour(tour);
+                console.log('computeCompleteTour demo result:', tour);
+            }
+
+            document.getElementById('runBtn').addEventListener('click', runScenario);
+        })();
+    </script>
+</body>
+</html>

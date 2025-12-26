@@ -1,0 +1,130 @@
+{
+  "id": "T_MULTI_001",
+  "departureTime": "09:30",
+  "courier": {
+    "id": "C2",
+    "name": "Marie Martin"
+  },
+  "stops": [
+    {
+      "node": { "id": "1", "latitude": 45.75406, "longitude": 4.857418 },
+      "serviceDuration": 0,
+      "type": "ENTREPOT",
+      "demand": null,
+      "relatedTourPoint": null
+    },
+    {
+      "node": { "id": "2", "latitude": 45.75343, "longitude": 4.8574653 },
+      "serviceDuration": 240,
+      "type": "PICKUP",
+      "demand": {
+        "id": "DEM_20250101_010",
+        "pickupAddress": "2",
+        "deliveryAddress": "3",
+        "pickupDuration": 240,
+        "deliveryDuration": 180
+      },
+      "relatedTourPoint": "3"
+    },
+    {
+      "node": { "id": "3", "latitude": 45.75425, "longitude": 4.8591485 },
+      "serviceDuration": 180,
+      "type": "DELIVERY",
+      "demand": {
+        "id": "DEM_20250101_010",
+        "pickupAddress": "2",
+        "deliveryAddress": "3",
+        "pickupDuration": 240,
+        "deliveryDuration": 180
+      },
+      "relatedTourPoint": "2"
+    },
+    {
+      "node": { "id": "4", "latitude": 45.753757, "longitude": 4.8601513 },
+      "serviceDuration": 300,
+      "type": "PICKUP",
+      "demand": {
+        "id": "DEM_20250101_011",
+        "pickupAddress": "4",
+        "deliveryAddress": "5",
+        "pickupDuration": 300,
+        "deliveryDuration": 300
+      },
+      "relatedTourPoint": "5"
+    },
+    {
+      "node": { "id": "5", "latitude": 45.754536, "longitude": 4.866525 },
+      "serviceDuration": 300,
+      "type": "DELIVERY",
+      "demand": {
+        "id": "DEM_20250101_011",
+        "pickupAddress": "4",
+        "deliveryAddress": "5",
+        "pickupDuration": 300,
+        "deliveryDuration": 300
+      },
+      "relatedTourPoint": "4"
+    },
+    {
+      "node": { "id": "1", "latitude": 45.75406, "longitude": 4.857418 },
+      "serviceDuration": 0,
+      "type": "ENTREPOT",
+      "demand": null,
+      "relatedTourPoint": null
+    }
+  ],
+  "legs": [
+    {
+      "from": { "id": "1", "latitude": 45.75406, "longitude": 4.857418 },
+      "to": { "id": "2", "latitude": 45.75343, "longitude": 4.8574653 },
+      "path": [
+        { "id": "1", "latitude": 45.75406, "longitude": 4.857418 },
+        { "id": "2", "latitude": 45.75343, "longitude": 4.8574653 }
+      ],
+      "distance": 700,
+      "travelTime": 420
+    },
+    {
+      "from": { "id": "2", "latitude": 45.75343, "longitude": 4.8574653 },
+      "to": { "id": "3", "latitude": 45.75425, "longitude": 4.8591485 },
+      "path": [
+        { "id": "2", "latitude": 45.75343, "longitude": 4.8574653 },
+        { "id": "3", "latitude": 45.75425, "longitude": 4.8591485 }
+      ],
+      "distance": 600,
+      "travelTime": 360
+    },
+    {
+      "from": { "id": "3", "latitude": 45.75425, "longitude": 4.8591485 },
+      "to": { "id": "4", "latitude": 45.753757, "longitude": 4.8601513 },
+      "path": [
+        { "id": "3", "latitude": 45.75425, "longitude": 4.8591485 },
+        { "id": "4", "latitude": 45.753757, "longitude": 4.8601513 }
+      ],
+      "distance": 400,
+      "travelTime": 240
+    },
+    {
+      "from": { "id": "4", "latitude": 45.753757, "longitude": 4.8601513 },
+      "to": { "id": "5", "latitude": 45.754536, "longitude": 4.866525 },
+      "path": [
+        { "id": "4", "latitude": 45.753757, "longitude": 4.8601513 },
+        { "id": "5", "latitude": 45.754536, "longitude": 4.866525 }
+      ],
+      "distance": 1500,
+      "travelTime": 900
+    },
+    {
+      "from": { "id": "5", "latitude": 45.754536, "longitude": 4.866525 },
+      "to": { "id": "1", "latitude": 45.75406, "longitude": 4.857418 },
+      "path": [
+        { "id": "5", "latitude": 45.754536, "longitude": 4.866525 },
+        { "id": "1", "latitude": 45.75406, "longitude": 4.857418 }
+      ],
+      "distance": 1800,
+      "travelTime": 1080
+    }
+  ],
+  "totalDuration": 5280,
+  "totalDistance": 5200
+}

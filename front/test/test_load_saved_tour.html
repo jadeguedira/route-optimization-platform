@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Test chargement tournée JSON</title>
+
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            text-align: center;
+        }
+        #map {
+            height: 500px;
+            width: 100%;
+            border: 2px solid #333;
+            margin-bottom: 20px;
+        }
+        .controls {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .controls input,
+        .controls button {
+            padding: 8px 12px;
+            font-size: 14px;
+            margin: 0 5px;
+        }
+        #tourSummary {
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 6px 8px;
+            text-align: center;
+        }
+        th {
+            background: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+<h1>Test : chargement d'une tournée JSON</h1>
+
+<div class="controls">
+    <input type="file" id="jsonFileInput" accept=".json">
+    <button type="button" onclick="clearTour()">Effacer</button>
+</div>
+
+<div id="map"></div>
+
+<div id="tourSummary"></div>
+
+<table id="tourStopsTable">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Type</th>
+        <th>Noeud</th>
+        <th>Demande</th>
+        <th>Arrivée</th>
+        <th>Durée service (min)</th>
+        <th>Départ</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<!-- Backend classes -->
+<script src="/backend/node.js"></script>
+<script src="/backend/segment.js"></script>
+<script src="/backend/courier.js"></script>
+<script src="/backend/demand.js"></script>
+<script src="/backend/tourpoint.js"></script>
+<script src="/backend/leg.js"></script>
+<script src="/backend/tours.js"></script>
+
+<!-- View (affichage carte + displayTour) -->
+<script src="/scripts/view.js"></script>
+<!-- System (loadTourFromJson) -->
+<script src="/backend/system.js"></script>
+
+
+<script>
+    const system = new System();
+    const view = new View("08:00", "map");
+
+    const input = document.getElementById("jsonFileInput");
+    const summaryDiv = document.getElementById("tourSummary");
+    const tbody = document.querySelector("#tourStopsTable tbody");
+
+    input.addEventListener("change", handleJsonFile);
+
+    async function handleJsonFile(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        let json;
+        try {
+            const text = await file.text();
+            json = JSON.parse(text);
+        } catch (err) {
+            alert("Erreur de lecture ou de parsing du JSON");
+            console.error(err);
+            return;
+        }
+
+        const tour = system.loadTourFromJSON(json);
+        if (!tour) {
+            alert("JSON de tournée invalide");
+            return;
+        }
+
+        view.displayTour(tour);
+        view.displayTourDetails(tour, summaryDiv, tbody);
+    }
+
+    function clearTour() {
+        view.clearMap();
+        view.displayTourDetails(null, summaryDiv, tbody);
+        input.value = "";
+    }
+</script>
+</body>
+</html>
