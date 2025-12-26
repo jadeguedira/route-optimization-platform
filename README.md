@@ -1,210 +1,201 @@
-# 🚴‍♂️ DelivHub – Optimisation de tournées Pickup & Delivery
+﻿# Route Optimization Platform
 
-Projet réalisé dans le cadre du **Projet Longue Durée (PLD Agile)** à l’**INSA Lyon**.  
-L’objectif est de concevoir une application permettant d’optimiser des tournées de livraison **Pickup & Delivery à vélo** en milieu urbain, à partir de plans et de demandes décrits en XML.
+## Description
 
----
+DelivHub is a web application designed to optimize bicycle delivery routes in urban environments using the Pickup & Delivery model. The application reads city maps and delivery requests from XML files, distributes demands among multiple couriers, and computes optimized tours that respect precedence constraints (pickup must occur before delivery). The solution includes an interactive map visualization, timeline tracking, and tour saving/loading capabilities.
 
-## 📌 Contexte du projet
+This project was developed as part of the Long-Term Agile Project (PLD Agile) at INSA Lyon.
 
 
-L’application permet de :
-- Charger un **plan de ville** (intersections + tronçons)
-- Charger ou créer des **demandes de livraison**
-- Répartir les demandes entre plusieurs **coursiers**
-- Calculer des **tournées optimisées** respectant les contraintes Pickup → Delivery
-- Visualiser les tournées sur une **carte interactive**
-- Sauvegarder et restaurer les tournées
+## How to Launch
 
----
+### Prerequisites
+- Node.js (v18 or higher)
+- Modern web browser (Chrome, Firefox, etc.)
 
-## 🧠 Fonctionnalités principales
+### Installation and Execution
 
-### 📂 Chargement des données
-- Chargement d’un **plan XML** (nœuds, segments, entrepôt)
-- Chargement de **demandes XML** (pickup, delivery, durées)
-- Validation automatique des fichiers (structure et cohérence)
-
-### 🚚 Gestion des coursiers
-- Création dynamique de coursiers
-- Sélection multiple de coursiers
-- Distribution automatique des demandes entre coursiers
-
-### 🧮 Calcul des tournées
-- Respect strict des contraintes de précédence (**Pickup avant Delivery**)
-- Minimisation du temps total de tournée
-- Vitesse constante : **15 km/h**
-- Départ et retour à l’entrepôt à **08:00**
-- Limite maximale d’une tournée : **8 heures**
-
-### 🗺️ Visualisation
-- Carte interactive via **Leaflet**
-- Affichage des itinéraires réels (Dijkstra / A*)
-- Timeline détaillée :
-  - Étapes
-  - Heures d’arrivée et de départ
-  - Type d’étape (Warehouse, Pickup, Delivery)
-
-### 💾 Sauvegarde & historique
-- Sauvegarde des tournées en **JSON**
-- Rechargement depuis le serveur
-- Historique des tournées calculées
-
----
-
-## 🏗️ Architecture du projet
-
-Le projet suit une **architecture MVC** claire et modulaire.
-
-### 🔹 Modèle (Backend logique – JavaScript)
-Dossier `/backend/` :
-
-- `Plan`, `Node`, `Segment` : représentation du graphe de la ville
-- `Demand` : demande Pickup & Delivery
-- `Courier` : coursier
-- `Tour`, `TourPoint`, `Leg` : structure d’une tournée
-- `ComputerTour` :
-  - Calcul des plus courts chemins (Dijkstra / A*)
-  - Résolution du TSP avec contraintes de précédence
-- `System` :
-  - Chargement des données
-  - Distribution des demandes (K-means)
-  - Calcul des tournées
-  - Sauvegarde / restauration
-
-### 🔹 Vue (Frontend)
-Dossier `/front/` :
-
-- Interface HTML / CSS
-- Carte interactive Leaflet
-- Timeline des tournées
-- Sidebar de gestion (coursiers, demandes)
-
-### 🔹 Contrôleur
-- `app.js` : gestion des interactions utilisateur
-- Coordination entre la vue et la logique métier
-
----
-
-## 🧩 Algorithmes utilisés
-
-### 🔸 Plus courts chemins
-- **Dijkstra**
-- **A*** (heuristique euclidienne)
-
-### 🔸 Optimisation de tournée (TSP)
-- Branch & Bound (petits ensembles)
-- Heuristique Nearest Neighbor
-- Amélioration locale (2-opt)
-- Respect strict des contraintes Pickup → Delivery
-
-### 🔸 Répartition multi-coursiers
-- **K-means clustering**
-- Chaque demande est atomique (pickup + delivery toujours ensemble)
-
----
-
-## 🛠️ Technologies utilisées
-
-- **JavaScript (ES6)**
-- **HTML / CSS**
-- **Leaflet**
-- **Node.js**
-- **XML / JSON**
-- **Git**
-
----
-
-## 🚀 Lancer le projet en local
-
-### 1️⃣ Prérequis
-- Node.js (v18+) installé
-- Navigateur moderne (Chrome, Firefox)
-
-### 2️⃣ Installation des dépendances
+1. Install dependencies:
 ```bash
 npm install
 ```
 
-### 3️⃣ Lancer le serveur
+2. Start the server:
 ```bash
 node front/server.js
 ```
 
-### 4️⃣ Ouvrir l'application
-
-👉 http://localhost:8080
-
----
-## 📁 Structure du projet
-
-```bash
-.
-├── backend/
-│   ├── demand.js
-│   ├── node.js
-│   ├── segment.js
-│   ├── plan.js
-│   ├── courier.js
-│   ├── tourpoint.js
-│   ├── leg.js
-│   ├── tours.js
-│   ├── computerTour.js
-│   └── system.js
-│
-├── front/
-│   ├── scripts/
-│   │   ├── app.js
-│   │   ├── view.js
-│   │   └── geocoding.js
-│   └── styles/
-│       └── styles.css
-│
-├── fichiersXMLPickupDelivery/   # Fichiers XML d'exemple (plans, demandes)
-├── TESTS/                       # Tests unitaires
-├── saved_tours/                 # Tournées sauvegardées
-└── README.md
+3. Open your browser and navigate to:
 ```
----
-## 🧪 Tests & robustesse
+http://localhost:8080
+```
 
-### Lancer les tests
+
+
+## Features
+
+### Data Loading
+- Load city maps from XML files (nodes, segments, warehouse location)
+- Load or create delivery requests from XML files (pickup, delivery, durations)
+- Automatic validation of file structure and data consistency
+
+### Courier Management
+- Create and manage multiple couriers dynamically
+- Select specific couriers for tour assignment
+- Automatic distribution of demands among couriers using K-means clustering
+
+### Tour Calculation
+- Strict respect of precedence constraints (Pickup before Delivery)
+- Minimization of total tour time
+- Constant speed: 15 km/h
+- Departure and return to warehouse at 08:00
+- Maximum tour duration: 8 hours
+
+### Visualization
+- Interactive map using Leaflet library
+- Display of actual routes computed with shortest path algorithms
+- Detailed timeline showing:
+  - Tour steps and waypoints
+  - Arrival and departure times
+  - Step types (Warehouse, Pickup, Delivery)
+
+### Save and History
+- Save computed tours in JSON format
+- Load previously saved tours from server
+- Browse tour history
+
+
+
+## Architecture
+
+### MVC Structure
+
+The project follows a clear Model-View-Controller architecture to separate concerns and ensure maintainability.
+
+**Model (Backend Logic - JavaScript)**
+
+Located in the `/backend/` directory:
+
+- **Plan, Node, Segment**: Representation of the city graph (intersections and road segments)
+- **Demand**: Pickup and Delivery request with associated durations
+- **Courier**: Courier entity with identifier and properties
+- **Tour, TourPoint, Leg**: Tour structure and components
+- **ComputerTour**: Core computation module
+  - Shortest path algorithms (Dijkstra, A* with Euclidean heuristic)
+  - TSP resolution with precedence constraints (Branch & Bound, Nearest Neighbor, 2-opt)
+- **System**: Central coordinator
+  - Data loading from XML
+  - Demand distribution using K-means clustering
+  - Tour computation orchestration
+  - Save and restore operations
+
+**View (Frontend)**
+
+Located in the `/front/` directory:
+
+- HTML/CSS interface
+- Interactive Leaflet map
+- Tour timeline display
+- Management sidebar (couriers, demands)
+
+**Controller**
+
+- **app.js**: Handles user interactions and coordinates between view and model
+- **view.js**: View management and updates
+- **geocoding.js**: Address geocoding utilities
+
+### Key Algorithms
+
+**Shortest Path**
+- Dijkstra's algorithm
+- A* algorithm with Euclidean heuristic
+
+**Tour Optimization (TSP with constraints)**
+- Branch & Bound for small sets
+- Nearest Neighbor heuristic
+- 2-opt local improvement
+- Strict enforcement of Pickup-Delivery precedence
+
+**Multi-Courier Distribution**
+- K-means clustering
+- Atomic demand handling (pickup and delivery stay together)
+
+
+
+## Technologies
+
+- JavaScript (ES6)
+- HTML/CSS
+- Leaflet (interactive maps)
+- Node.js
+- XML/JSON
+- Git
+
+
+
+## Project Structure
+
+```
+.
+ backend/                     # Business logic and algorithms
+    demand.js
+    node.js
+    segment.js
+    plan.js
+    courier.js
+    tourpoint.js
+    leg.js
+    tours.js
+    computerTour.js
+    system.js
+
+ front/                       # User interface
+    scripts/
+       app.js              # Controller
+       view.js             # View management
+       geocoding.js
+    styles/
+        styles.css
+
+ fichiersXMLPickupDelivery/   # Sample XML files (maps and requests)
+ TESTS/                       # Unit tests
+ saved_tours/                 # Saved tour files
+ README.md
+```
+
+
+
+## Testing
+
+### Run all tests
 ```bash
 npm test
 ```
 
-### Lancer les tests avec couverture de code
+### Run tests with coverage report
 ```bash
 npm run test:coverage
 ```
 
-### Points testés
-- Vérification systématique des fichiers XML
-- Gestion des cas limites :
-  - demandes invalides
-  - nœuds hors plan
-  - tournées impossibles
-- Logs détaillés pour l'analyse des performances et du débogage
+### Test Coverage
+- Systematic XML file validation
+- Edge case handling:
+  - Invalid demands
+  - Nodes outside the map
+  - Impossible tours
+- Detailed logging for performance analysis and debugging
 
----
-## 📈 Perspectives d'amélioration
 
-- Contraintes horaires de livraison
-- Capacité des coursiers
-- Recalcul dynamique des tournées
-- Algorithmes d'optimisation avancés
-- Backend persistant (API REST)
 
----
+## Future Improvements
 
-## 👥 Auteurs
+- Time window constraints for deliveries
+- Courier capacity limits
+- Dynamic tour recalculation
+- Advanced optimization algorithms (genetic algorithms, simulated annealing)
+- Persistent backend with REST API
+- Real-time tracking integration
 
-Projet réalisé par l'héxanôme **H4403** – INSA Lyon, 2025-2026
+## License
 
----
-
-## 📄 Licence
-
-Ce projet est réalisé dans un cadre académique (INSA Lyon – PLD Agile).
-
----
+This project is developed in an academic context (INSA Lyon - PLD Agile).
